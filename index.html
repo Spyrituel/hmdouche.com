@@ -808,6 +808,41 @@
 </head>
 <body>
   <div class="page-wrapper">
+    <!-- NAVIGATION TOP BUTTONS -->
+<style>
+  .top-nav-buttons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, #38bdf8, #22c55e, #6366f1);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-nav-buttons a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .top-nav-buttons a:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+  }
+  .page-wrapper { margin-top: 50px; }
+</style>
+
+<div class="top-nav-buttons">
+  <span style="color: white; font-weight: 600;">Planning S1</span>
+  <a href="binaire.html">📘 Révision Binaire</a>
+</div>
     <header class="header">
       <div class="header-content">
         <div class="header-left">
