@@ -1,946 +1,1394 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emploi du Temps - Premier Semestre</title>
-    <style>
-        :root {
-  /* Primitive Color Tokens */
-  --color-white: rgba(255, 255, 255, 1);
-  --color-black: rgba(0, 0, 0, 1);
-  --color-cream-50: rgba(252, 252, 249, 1);
-  --color-cream-100: rgba(255, 255, 253, 1);
-  --color-gray-200: rgba(245, 245, 245, 1);
-  --color-gray-300: rgba(167, 169, 169, 1);
-  --color-gray-400: rgba(119, 124, 124, 1);
-  --color-slate-500: rgba(98, 108, 113, 1);
-  --color-brown-600: rgba(94, 82, 64, 1);
-  --color-charcoal-700: rgba(31, 33, 33, 1);
-  --color-charcoal-800: rgba(38, 40, 40, 1);
-  --color-slate-900: rgba(19, 52, 59, 1);
-  --color-teal-300: rgba(50, 184, 198, 1);
-  --color-teal-400: rgba(45, 166, 178, 1);
-  --color-teal-500: rgba(33, 128, 141, 1);
-  --color-teal-600: rgba(29, 116, 128, 1);
-  --color-teal-700: rgba(26, 104, 115, 1);
-  --color-teal-800: rgba(41, 150, 161, 1);
-  --color-red-400: rgba(255, 84, 89, 1);
-  --color-red-500: rgba(192, 21, 47, 1);
-  --color-orange-400: rgba(230, 129, 97, 1);
-  --color-orange-500: rgba(168, 75, 47, 1);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emploi du Temps - ASRI 1 Groupe 7</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  /* RGB versions for opacity control */
-  --color-brown-600-rgb: 94, 82, 64;
-  --color-teal-500-rgb: 33, 128, 141;
-  --color-slate-900-rgb: 19, 52, 59;
-  --color-slate-500-rgb: 98, 108, 113;
-  --color-red-500-rgb: 192, 21, 47;
-  --color-red-400-rgb: 255, 84, 89;
-  --color-orange-500-rgb: 168, 75, 47;
-  --color-orange-400-rgb: 230, 129, 97;
+  <style>
+    :root {
+      --bg-body: #f5f7fb;
+      --bg-card: #ffffff;
+      --bg-header-gradient: linear-gradient(135deg, #38bdf8, #22c55e, #6366f1);
+      --text-main: #0f172a;
+      --text-soft: #6b7280;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.12);
+      --radius-lg: 18px;
+      --radius-xl: 26px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --shadow-card: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.28s ease-out;
+    }
 
-  /* Background color tokens (Light Mode) */
-  --color-bg-1: rgba(59, 130, 246, 0.08);
-  --color-bg-2: rgba(245, 158, 11, 0.08);
-  --color-bg-3: rgba(34, 197, 94, 0.08);
-  --color-bg-4: rgba(239, 68, 68, 0.08);
-  --color-bg-5: rgba(147, 51, 234, 0.08);
-  --color-bg-6: rgba(249, 115, 22, 0.08);
-  --color-bg-7: rgba(236, 72, 153, 0.08);
-  --color-bg-8: rgba(6, 182, 212, 0.08);
+    [data-theme="dark"] {
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-header-gradient: linear-gradient(135deg, #0369a1, #15803d, #4f46e5);
+      --text-main: #f1f5f9;
+      --text-soft: #cbd5e1;
+      --accent: #60a5fa;
+      --accent-soft: rgba(96, 165, 250, 0.15);
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.5);
+      --shadow-card: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
 
-  /* Semantic Color Tokens (Light Mode) */
-  --color-background: var(--color-cream-50);
-  --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
-  --color-text-secondary: var(--color-slate-500);
-  --color-primary: var(--color-teal-500);
-  --color-primary-hover: var(--color-teal-600);
-  --color-primary-active: var(--color-teal-700);
-  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-btn-primary-text: var(--color-cream-50);
-  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-error: var(--color-red-500);
-  --color-success: var(--color-teal-500);
-  --color-warning: var(--color-orange-500);
-  --color-info: var(--color-slate-500);
-  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Typography */
-  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-size-xs: 11px;
-  --font-size-sm: 12px;
-  --font-size-base: 14px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 20px;
-  --font-size-3xl: 24px;
-  --font-size-4xl: 30px;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 550;
-  --font-weight-bold: 600;
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 32px 16px;
+      transition: background 0.3s ease-out, color 0.3s ease-out;
+    }
 
-  /* Spacing */
-  --space-4: 4px;
-  --space-8: 8px;
-  --space-12: 12px;
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-32: 32px;
+    body:not([data-theme="dark"]) {
+      background: radial-gradient(circle at top left, #e0f2fe, transparent 55%),
+                  radial-gradient(circle at bottom right, #dcfce7, transparent 50%),
+                  var(--bg-body);
+    }
 
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-base: 8px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
-  --radius-full: 9999px;
+    .page-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      animation: wrapperIn 0.6s var(--transition-med);
+    }
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
-    0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
-    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    [data-theme="dark"] .page-wrapper {
+      background: rgba(30, 41, 59, 0.95);
+    }
 
-  /* Animation */
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
-}
+    @keyframes wrapperIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-gray-400-rgb: 119, 124, 124;
-    --color-teal-300-rgb: 50, 184, 198;
-    --color-gray-300-rgb: 167, 169, 169;
-    --color-gray-200-rgb: 245, 245, 245;
+    /* HEADER */
+    .header {
+      position: relative;
+      padding: 20px 26px 18px;
+      background: var(--bg-header-gradient);
+      color: #f9fafb;
+      overflow: hidden;
+    }
 
-    --color-bg-1: rgba(29, 78, 216, 0.15);
-    --color-bg-2: rgba(180, 83, 9, 0.15);
-    --color-bg-3: rgba(21, 128, 61, 0.15);
-    --color-bg-4: rgba(185, 28, 28, 0.15);
-    --color-bg-5: rgba(107, 33, 168, 0.15);
-    --color-bg-6: rgba(194, 65, 12, 0.15);
-    --color-bg-7: rgba(190, 24, 93, 0.15);
-    --color-bg-8: rgba(8, 145, 178, 0.15);
+    .header-content {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      z-index: 1;
+    }
 
-    --color-background: var(--color-charcoal-700);
-    --color-surface: var(--color-charcoal-800);
-    --color-text: var(--color-gray-200);
-    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
-    --color-primary: var(--color-teal-300);
-    --color-primary-hover: var(--color-teal-400);
-    --color-primary-active: var(--color-teal-800);
-    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
-    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
-    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-error: var(--color-red-400);
-    --color-success: var(--color-teal-300);
-    --color-warning: var(--color-orange-400);
-    --color-info: var(--color-gray-300);
-    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
-    --color-btn-primary-text: var(--color-slate-900);
-    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
-    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
-  }
-}
+    .header-left h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-@font-face {
-  font-family: 'FKGroteskNeue';
-  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
-    format('woff2');
-}
+    .header-left h1 span.logo-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #f97316;
+      box-shadow: 0 0 0 7px rgba(248, 171, 96, 0.55);
+    }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    .header-left p {
+      margin-top: 4px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
 
-body {
-    font-family: 'Geist', 'FKGroteskNeue', 'Inter', Arial, sans-serif;
-    background: linear-gradient(180deg, #fff 0%, #f3f8ff 100%) !important;
-    color: var(--color-text);
-    line-height: var(--line-height-normal);
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    transition: background 0.4s var(--ease-standard);
-}
+    .class-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: rgba(15, 23, 42, 0.16);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      backdrop-filter: blur(10px);
+    }
 
+    .class-badge span.icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.67);
+      font-size: 0.9rem;
+    }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--space-24);
-}
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
 
-.header {
-    text-align: center;
-    margin-bottom: var(--space-32);
-    padding: var(--space-32) 0;
-    background: linear-gradient(90deg, #beeafe 0%, #ffd6e0 100%);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 20px rgba(100,184,230,0.08);
-    animation: fade-slide-up 0.7s var(--ease-standard);
-}
+    .header-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
 
-.header h1 {
-    font-size: var(--font-size-4xl);
-    font-weight: var(--font-weight-bold);
-    color: #2d4458;
-    margin-bottom: var(--space-8);
-    letter-spacing: 0.5px;
-    text-shadow: 0 1px 0 #fff, 0 2px 8px #d3edfd;
-    transition: color 0.4s var(--ease-standard);
-    font-family: "Geist", "FKGroteskNeue", "Inter", Arial, sans-serif;
-}
+    .theme-toggle,
+    .today-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #f9fafb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: background 0.2s ease-out, transform 0.2s ease-out;
+      backdrop-filter: blur(10px);
+    }
 
-.header p {
-    font-size: var(--font-size-lg);
-    color: #39809c;
-    opacity: 0.75;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-}
+    .theme-toggle:hover,
+    .today-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.08);
+    }
 
-.class-name {
-    font-size: 22px;
-    font-weight: 580;
-    color: #2d5a7a;
-    margin: var(--space-12) 0 var(--space-16) 0;
-    padding: var(--space-12) var(--space-24);
-    background: linear-gradient(90deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 100%);
-    border-radius: var(--radius-base);
-    display: inline-block;
-    border: 1.5px solid rgba(100,180,230,0.25);
-    box-shadow: 0 2px 12px rgba(120,195,240,0.12);
-    letter-spacing: 0.02em;
-    transition: all 0.3s var(--ease-standard);
-}
+    .semester-pill {
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.2);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
 
-.nav-tabs {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-8);
-    margin-bottom: var(--space-32);
-    flex-wrap: wrap;
-    position: relative;
-    animation: fade-in 1s var(--ease-standard);
-}
+    .days-hint {
+      font-size: 0.78rem;
+      opacity: 0.85;
+    }
 
-.nav-tab {
-    position: relative;
-    padding: var(--space-12) var(--space-24);
-    background: linear-gradient(90deg,#e4efff 0%,#ffeeeb 100%);
-    border: 1px solid var(--color-card-border);
-    border-radius: var(--radius-base);
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text);
-    transition: background 0.3s var(--ease-standard), color 0.3s, box-shadow 0.3s, transform 0.22s var(--ease-standard);
-    box-shadow: var(--shadow-xs);
-    outline: none;
-    overflow: hidden;
-}
+    /* CONTENU */
+    .content {
+      padding: 16px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--bg-body);
+    }
 
-.nav-tab.active {
-    background: linear-gradient(90deg,#8ceabb 0%,#3786f8 100%);
-    color: #fff;
-    border-color: #6bc3f3;
-    box-shadow: 0 2px 16px #7ad9df44, 0 1px 0 #fff;
-}
+    /* VUE GLOBALE */
+    .week-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
 
-.nav-tab::after {
-    content: "";
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 6px;
-    height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(90deg,#47a8ed 0%,#ff97ab 100%);
-    opacity: 0;
-    transform: scaleX(0.3);
-    transition: all 0.32s var(--ease-standard);
-}
+    .day-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease-out, background 0.2s ease-out;
+    }
 
-.nav-tab.active::after {
-    opacity: 1;
-    transform: scaleX(1);
-}
+    .day-stat:hover {
+      transform: translateY(-2px);
+      background: rgba(59, 130, 246, 0.2);
+    }
 
-.nav-tab:hover {
-    background: linear-gradient(90deg,#e1f3fb 0%,#ffeae4 100%);
-    color: #399dc8;
-    transform: translateY(-3px) scale(1.08);
-    box-shadow: 0 5px 18px rgba(144,193,237,0.10);
-}
+    .day-stat-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
 
-.nav-tab:active {
-    transform: scale(0.97);
-    box-shadow: 0 1px 3px #ccc;
-}
+    .day-stat-courses {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
 
-.schedule-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: var(--space-20);
-    margin-bottom: var(--space-32);
-}
+    .day-stat-hours {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
 
-.course-card {
-    background: linear-gradient(120deg,#fff 70%,rgba(66,186,224,0.07) 100%);
-    border-radius: var(--radius-lg);
-    border: 1.5px solid var(--color-card-border);
-    padding: var(--space-24) var(--space-20) var(--space-20) var(--space-20);
-    cursor: pointer;
-    transition: transform 0.28s var(--ease-standard), box-shadow 0.28s var(--ease-standard), background 0.35s, filter 0.28s;
-    box-shadow: 0 2px 24px 0 rgba(166,214,255,0.08), 0 0px 0px #fff;
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(32px);
-    animation: fade-slide-up 0.7s var(--ease-standard) forwards;
-}
+    /* NAVIGATION JOURS */
+    .day-nav {
+      display: flex;
+      gap: 10px;
+      padding: 4px;
+      background: var(--bg-card);
+      border-radius: 999px;
+      box-shadow: var(--shadow-card);
+      position: sticky;
+      top: 8px;
+      z-index: 5;
+    }
 
-.course-card[data-animated] {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
+    .day-tab {
+      flex: 1;
+      border: none;
+      outline: none;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.86rem;
+      font-weight: 500;
+      background: transparent;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      position: relative;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
 
-.course-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 8px;
-    height: 100%;
-    border-radius: 8px 0 0 8px;
-    filter: blur(1px);
-    transition: width 0.36s, background 0.3s;
-    z-index: 1;
-}
+    .day-tab span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+    }
 
-.course-card.teal::before { background: linear-gradient(90deg,#81e8e3 50%,#1fb8cd 100%); }
-.course-card.blue::before { background: linear-gradient(90deg,#a6d7ff 0%,#3b82f6 100%); }
-.course-card.purple::before { background: linear-gradient(90deg,#ede7ff 0%,#9333ea 100%); }
-.course-card.orange::before { background: linear-gradient(90deg,#fff3e1 0%,#f97316 100%); }
-.course-card.red::before { background: linear-gradient(90deg,#ffd8e0 0%,#ef4444 100%); }
-.course-card.green::before { background: linear-gradient(90deg,#dbfce7 0%,#22c55e 100%); }
-.course-card.indigo::before { background: linear-gradient(90deg,#cfd7fe 0%,#6366f1 100%); }
-.course-card.crimson::before { background: linear-gradient(90deg,#ffe2e7 0%,#dc2626 100%); }
-.course-card.amber::before { background: linear-gradient(90deg,#fff9e4 0%,#fbbf24 100%); }
+    .day-tab.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
 
-.course-card:hover {
-    transform: translateY(-7px) scale(1.04);
-    box-shadow: 0 8px 48px 0 rgba(167,207,255,0.18);
-    background: linear-gradient(120deg,#e6faff 84%,rgba(203,249,255,0.17) 100%);
-    filter: brightness(1.06) saturate(1.015);
-}
+    .day-tab.active span.dot {
+      background: var(--accent);
+    }
 
-.course-card:active {
-    transform: scale(0.96);
-    background: linear-gradient(120deg,#f7fbff 80%,#eafcff 99%);
-    box-shadow: 0 2px 10px #aacaff31;
-    filter: brightness(1.025) contrast(1.05);
-}
+    /* SECTION JOUR / LISTE COURS */
+    .day-panels {
+      position: relative;
+      min-height: 260px;
+    }
 
-.course-card[data-ripple]::after {
-    content: '';
-    position: absolute;
-    left: var(--ripple-x, 50%);
-    top: var(--ripple-y, 40%);
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(72,176,255,0.15);
-    pointer-events: none;
-    animation: ripple 0.7s cubic-bezier(.22,1,.29,1) forwards;
-    z-index: 2;
-}
-@keyframes ripple {
-    to {
-      width: 420px;
-      height: 420px;
+    .day-panel {
+      display: none;
+    }
+
+    .day-panel.active {
+      display: grid;
+      animation: fadeSlideIn 0.35s var(--transition-med);
+    }
+
+    .day-panel[data-day="dimanche"].active {
+      animation: slideFromLeft 0.35s var(--transition-med);
+    }
+
+    .day-panel[data-day="lundi"].active {
+      animation: slideFromBottom 0.35s var(--transition-med);
+    }
+
+    .day-panel[data-day="mardi"].active {
+      animation: slideFromRight 0.35s var(--transition-med);
+    }
+
+    .day-panel[data-day="mercredi"].active {
+      animation: rotateIn 0.35s var(--transition-med);
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideFromLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideFromBottom {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideFromRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes rotateIn {
+      from {
+        opacity: 0;
+        transform: rotate(-3deg) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+      }
+    }
+
+    .day-panel.grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 780px) {
+      .day-panel.grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .empty-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 50px 16px 40px;
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+
+    .empty-day span.icon {
+      font-size: 2.4rem;
+    }
+
+    .empty-day p {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+    }
+
+    /* CARTE COURS */
+    .course-card {
+      position: relative;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 13px 14px 12px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transform-origin: center;
+      transition:
+        transform var(--transition-med),
+        box-shadow var(--transition-med),
+        border-color var(--transition-med),
+        background 0.18s ease-out;
+    }
+
+    .course-card.next-course {
+      border: 2px solid #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2), var(--shadow-card);
+      background: linear-gradient(135deg, var(--bg-card), rgba(34, 197, 94, 0.05));
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+      border-color: rgba(59, 130, 246, 0.35);
+    }
+
+    .course-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .course-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .course-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      background: #eff6ff;
+    }
+
+    [data-theme="dark"] .course-icon {
+      background: rgba(96, 165, 250, 0.15);
+    }
+
+    .badge-module {
+      font-size: 0.72rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.04);
+      color: var(--text-soft);
+    }
+
+    .course-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .time-pill {
+      font-size: 0.8rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.1);
+      color: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    [data-theme="dark"] .time-pill {
+      background: rgba(96, 165, 250, 0.15);
+      color: #60a5fa;
+    }
+
+    .time-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #1d4ed8;
+    }
+
+    [data-theme="dark"] .time-pill span.dot {
+      background: #60a5fa;
+    }
+
+    .teacher {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .teacher span.avatar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .objective-hint {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      opacity: 0.92;
+    }
+
+    .objective-hint span.link {
+      color: #2563eb;
+      font-weight: 500;
+    }
+
+    [data-theme="dark"] .objective-hint span.link {
+      color: #60a5fa;
+    }
+
+    /* TIMELINE */
+    .timeline-indicator {
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      width: 4px;
+      height: 40%;
+      background: linear-gradient(to bottom, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0));
+      border-radius: 999px;
+      transform: translateY(-50%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    /* Couleurs spécifiques par module */
+    .course-card[data-color="teal"] {
+      border-left: 4px solid #14b8a6;
+    }
+    .course-card[data-color="blue"] {
+      border-left: 4px solid #3b82f6;
+    }
+    .course-card[data-color="purple"] {
+      border-left: 4px solid #8b5cf6;
+    }
+    .course-card[data-color="orange"] {
+      border-left: 4px solid #f97316;
+    }
+    .course-card[data-color="red"] {
+      border-left: 4px solid #ef4444;
+    }
+    .course-card[data-color="green"] {
+      border-left: 4px solid #22c55e;
+    }
+    .course-card[data-color="indigo"] {
+      border-left: 4px solid #6366f1;
+    }
+    .course-card[data-color="crimson"] {
+      border-left: 4px solid #e11d48;
+    }
+    .course-card[data-color="amber"] {
+      border-left: 4px solid #f59e0b;
+    }
+
+    /* LÉGENDE */
+    .legend-section {
+      padding: 14px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .legend-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-dot[data-color="teal"] { background: #14b8a6; }
+    .legend-dot[data-color="blue"] { background: #3b82f6; }
+    .legend-dot[data-color="purple"] { background: #8b5cf6; }
+    .legend-dot[data-color="orange"] { background: #f97316; }
+    .legend-dot[data-color="red"] { background: #ef4444; }
+    .legend-dot[data-color="green"] { background: #22c55e; }
+    .legend-dot[data-color="indigo"] { background: #6366f1; }
+    .legend-dot[data-color="crimson"] { background: #e11d48; }
+    .legend-dot[data-color="amber"] { background: #f59e0b; }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.9));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
       opacity: 0;
-    }
-}
-
-.course-card:hover::before {
-    width: 14px;
-}
-
-.course-card:active::before {
-    width: 20px;
-}
-
-
-.course-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    transition: width var(--duration-normal) var(--ease-standard);
-}
-
-.course-card.teal::before { background-color: var(--color-primary); }
-.course-card.blue::before { background: #3b82f6; }
-.course-card.purple::before { background: #9333ea; }
-.course-card.orange::before { background: #f97316; }
-.course-card.red::before { background: #ef4444; }
-.course-card.green::before { background: #22c55e; }
-.course-card.indigo::before { background: #6366f1; }
-.course-card.crimson::before { background: #dc2626; }
-.course-card.amber::before { background: #f59e0b; }
-
-.course-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-}
-
-.course-card:hover::before {
-    width: 8px;
-}
-
-.course-time {
-    display: inline-block;
-    font-size: var(--font-size-sm);
-    font-weight: 550;
-    color: #3e96de;
-    background: linear-gradient(90deg,rgba(131,213,253,0.16) 0%,rgba(255,202,211,0.18) 100%);
-    padding: 7px 18px 7px 16px;
-    border-radius: 19px;
-    margin-bottom: var(--space-12);
-    transition: all 0.28s var(--ease-standard);
-    border: 1px solid rgba(121,190,242,0.14);
-    box-shadow: 0 1px 6px rgba(131,217,247,0.06);
-}
-
-.course-card:hover .course-time {
-    background: linear-gradient(90deg,rgba(131,213,253,0.28) 0%,rgba(255,202,211,0.3) 100%);
-    color: #3491ce;
-    box-shadow: 0 2px 12px rgba(131,217,247,0.11);
-    transform: scale(1.028);
-}
-
-.course-title {
-    font-size: 18px;
-    font-weight: 590;
-    color: #2a4659;
-    margin-bottom: var(--space-8);
-    line-height: 1.35;
-    letter-spacing: -0.015em;
-    transition: color 0.27s, transform 0.28s;
-}
-
-.course-card:hover .course-title {
-    color: #204368;
-    transform: translateX(2px);
-}
-
-.course-professor {
-    font-size: var(--font-size-base);
-    color: #6995b3;
-    display: flex;
-    align-items: center;
-    gap: var(--space-8);
-    font-weight: 500;
-    opacity: 0.87;
-    transition: all 0.27s;
-}
-
-.course-professor::before {
-    content: '👨‍🏫';
-    font-size: var(--font-size-lg);
-    transition: transform 0.28s var(--ease-standard);
-    display: inline-block;
-}
-
-.course-card:hover .course-professor::before {
-    transform: scale(1.14) rotate(3deg);
-}
-
-.course-card:hover .course-professor {
-    color: #4d85ab;
-    opacity: 1;
-}
-
-.empty-state {
-    text-align: center;
-    padding: var(--space-32);
-    background: linear-gradient(135deg,#fef5ff 0%,#f9fffe 100%);
-    border-radius: var(--radius-lg);
-    border: 1.5px solid rgba(168,224,255,0.18);
-    box-shadow: 0 3px 28px rgba(195,232,250,0.1);
-    animation: fade-in 0.9s var(--ease-standard);
-}
-
-.empty-state-icon {
-    font-size: 62px;
-    margin-bottom: var(--space-16);
-    animation: bounce 2.1s infinite;
-    display: inline-block;
-    filter: drop-shadow(0 3px 9px rgba(255,217,156,0.14));
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-}
-
-.empty-state-text {
-    font-size: 22px;
-    color: #5696c3;
-    font-weight: 540;
-    letter-spacing: 0.028em;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(142deg,rgba(88,137,176,0.54) 0%,rgba(129,180,222,0.42) 100%);
-    backdrop-filter: blur(6px);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: var(--space-20);
-    animation: fade-in 0.32s var(--ease-standard);
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: linear-gradient(155deg,#fff 50%,#f8fdff 100%);
-    border-radius: 16px;
-    padding: var(--space-32);
-    max-width: 620px;
-    width: 100%;
-    position: relative;
-    box-shadow: 0 12px 64px rgba(120,185,235,0.17), 0 1px 0 #fff;
-    max-height: 90vh;
-    overflow-y: auto;
-    border: 1.5px solid rgba(168,218,255,0.28);
-}
-
-.modal-close {
-    position: absolute;
-    top: var(--space-16);
-    right: var(--space-16);
-    background: linear-gradient(135deg,#ffe9ed 0%,#e8f5ff 100%);
-    border: 1px solid rgba(188,224,255,0.22);
-    font-size: 21px;
-    cursor: pointer;
-    color: #5a8db7;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9px;
-    transition: all 0.25s var(--ease-standard);
-    font-weight: 400;
-    box-shadow: 0 1px 6px rgba(176,217,255,0.06);
-}
-
-.modal-close:hover {
-    background: linear-gradient(135deg,#ffd9e4 0%,#d6eeff 100%);
-    color: #3e7fb8;
-    transform: rotate(90deg) scale(1.12);
-    box-shadow: 0 3px 18px rgba(176,217,255,0.14);
-}
-
-.modal-close:active {
-    transform: rotate(90deg) scale(0.94);
-    background: linear-gradient(135deg,#ffc9d7 0%,#cde6ff 100%);
-}
-
-.modal-header {
-    margin-bottom: var(--space-24);
-    padding-right: var(--space-32);
-}
-
-.modal-title {
-    font-size: 27px;
-    font-weight: 620;
-    color: #2a4659;
-    margin-bottom: var(--space-8);
-    letter-spacing: -0.02em;
-    line-height: 1.28;
-    background: linear-gradient(90deg,#2a4659 0%,#3a7aac 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.modal-subtitle {
-    font-size: 15px;
-    color: #5d91ba;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    font-weight: 500;
-}
-
-.modal-body {
-    margin-top: var(--space-24);
-}
-
-.modal-section {
-    margin-bottom: var(--space-20);
-    background: linear-gradient(135deg,rgba(215,243,255,0.12) 0%,rgba(255,235,240,0.14) 100%);
-    padding: 18px 20px;
-    border-radius: 11px;
-    border: 1px solid rgba(163,218,255,0.17);
-}
-
-.modal-section-title {
-    font-size: 13px;
-    font-weight: 610;
-    color: #4da0d6;
-    margin-bottom: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.modal-section-content {
-    font-size: 15px;
-    color: #3d5f78;
-    line-height: 1.65;
-    font-weight: 450;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: var(--space-16);
+      visibility: hidden;
+      transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
+      z-index: 50;
     }
 
-    .header h1 {
-        font-size: var(--font-size-3xl);
+    [data-theme="dark"] .modal-backdrop {
+      background: radial-gradient(circle at top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.95));
     }
 
-    .schedule-container {
-        grid-template-columns: 1fr;
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
     }
 
-    .modal-content {
-        padding: var(--space-24);
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: var(--bg-card);
+      border-radius: 22px;
+      box-shadow: var(--shadow-soft);
+      transform: translateY(12px) scale(0.97);
+      opacity: 0;
+      transition: transform 0.28s var(--transition-med), opacity 0.28s var(--transition-med);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-header {
+      padding: 16px 20px 10px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    [data-theme="dark"] .modal-header {
+      border-bottom-color: rgba(71, 85, 105, 0.5);
+    }
+
+    .modal-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .modal-title {
-        font-size: var(--font-size-2xl);
+      font-size: 1.02rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
     }
-}
-    </style>
+
+    .modal-sub {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(15, 23, 42, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    [data-theme="dark"] .modal-close {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-close:hover {
+      background: rgba(15, 23, 42, 0.08);
+      transform: rotate(8deg) scale(1.05);
+    }
+
+    .modal-body {
+      padding: 14px 20px 18px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+
+    .modal-body p {
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 10px 20px 14px;
+      border-top: 1px solid rgba(226, 232, 240, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    [data-theme="dark"] .modal-footer {
+      border-top-color: rgba(71, 85, 105, 0.5);
+    }
+
+    .pill-info {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.08);
+      color: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    [data-theme="dark"] .pill-info {
+      background: rgba(96, 165, 250, 0.15);
+      color: #60a5fa;
+    }
+
+    @media (max-width: 640px) {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-right {
+        align-items: flex-start;
+      }
+      .content {
+        padding: 16px 14px 18px;
+      }
+      .page-wrapper {
+        border-radius: 20px;
+      }
+      .week-overview {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>📅 Emploi du Temps</h1>
-            <div class="class-name">ASRI 1 Groupe 7</div>
-            <p>Premier Semestre - Dimanche à Mercredi</p>
-        </header>
-
-        <nav class="nav-tabs" id="navTabs">
-            <button class="nav-tab active" data-day="dimanche">Dimanche</button>
-            <button class="nav-tab" data-day="lundi">Lundi</button>
-            <button class="nav-tab" data-day="mardi">Mardi</button>
-            <button class="nav-tab" data-day="mercredi">Mercredi</button>
-        </nav>
-
-        <div id="scheduleContainer" class="schedule-container"></div>
-    </div>
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose">&times;</button>
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <div class="modal-subtitle">
-                    <span id="modalTime"></span>
-                    <span id="modalProfessor"></span>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <div class="modal-section-title">Objectif du module</div>
-                    <div class="modal-section-content" id="modalObjectif"></div>
-                </div>
-            </div>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <h1>
+            <span class="logo-dot"></span>
+            Emploi du Temps
+          </h1>
+          <p>Vue interactive de ton planning de cours.</p>
+          <div class="class-badge">
+            <span class="icon">🎓</span>
+            <span>ASRI 1 Groupe 7</span>
+          </div>
         </div>
+        <div class="header-right">
+          <div class="header-controls">
+            <button class="theme-toggle" id="themeToggle" title="Basculer le mode sombre/clair">
+              ☀️
+            </button>
+            <button class="today-btn" id="todayBtn" title="Aujourd'hui / Prochain cours">
+              ⏱️
+            </button>
+          </div>
+          <div class="semester-pill">Premier semestre</div>
+          <div class="days-hint">Dimanche à Mardi • Mercredi libre</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- VUE GLOBALE -->
+      <section class="week-overview" id="weekOverview"></section>
+
+      <nav class="day-nav">
+        <button class="day-tab active" data-day="dimanche">
+          <span class="dot"></span> Dimanche
+        </button>
+        <button class="day-tab" data-day="lundi">
+          <span class="dot"></span> Lundi
+        </button>
+        <button class="day-tab" data-day="mardi">
+          <span class="dot"></span> Mardi
+        </button>
+        <button class="day-tab" data-day="mercredi">
+          <span class="dot"></span> Mercredi
+        </button>
+      </nav>
+
+      <section class="day-panels">
+        <!-- Dimanche -->
+        <div class="day-panel grid active" data-day-panel="dimanche" data-day="dimanche">
+          <article class="course-card" data-color="teal" data-module="Système d'exploitation Windows" data-teacher="Mr Belkhous" data-time="8h30 - 10h35" data-objective="Comprendre la configuration du système d'exploitation Windows, l'installation et la mise à niveau, la gestion des applications et services, la gestion des fichiers et dossiers, la gestion des périphériques, et la maintenance du système.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">🖥️</div>
+                <span>Système d'exploitation Windows</span>
+              </div>
+              <span class="badge-module">Windows</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                8h30 - 10h35
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mr Belkhous
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">gérer et maintenir un poste Windows.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="blue" data-module="Structure machine" data-teacher="Mme Hassaim" data-time="10h50 - 11h50" data-objective="Acquérir les connaissances de base sur les fonctions et circuits logiques. Comprendre les circuits combinatoires, séquentiels, et leurs applications (additionneur, multiplexeur, compteurs, encodeurs, décodeurs).">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">⚙️</div>
+                <span>Structure machine</span>
+              </div>
+              <span class="badge-module">Architecture</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                10h50 - 11h50
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Hassaim
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">bases des circuits logiques.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="blue" data-module="Structure machine" data-teacher="Mme Hassaim" data-time="12h30 - 13h30" data-objective="Suite du cours précédent - Approfondir les concepts de logique combinatoire et séquentielle.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">⚙️</div>
+                <span>Structure machine</span>
+              </div>
+              <span class="badge-module">Architecture</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                12h30 - 13h30
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Hassaim
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">approfondir la logique séquentielle.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="purple" data-module="Bureautique" data-teacher="Mme Hassaim" data-time="13h35 - 14h35" data-objective="Maîtriser les outils bureautiques modernes et leurs applications professionnelles.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">📊</div>
+                <span>Bureautique</span>
+              </div>
+              <span class="badge-module">Outils</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                13h35 - 14h35
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Hassaim
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">maîtriser les suites bureautiques.</span>
+            </p>
+          </article>
+        </div>
+
+        <!-- Lundi -->
+        <div class="day-panel grid" data-day-panel="lundi" data-day="lundi">
+          <article class="course-card" data-color="orange" data-module="Technique d'expression" data-teacher="Mme Berrouane" data-time="8h30 - 9h30" data-objective="Améliorer la communication orale et écrite, développer les capacités de présentation et d'argumentation.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">🗣️</div>
+                <span>Technique d'expression</span>
+              </div>
+              <span class="badge-module">Communication</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                8h30 - 9h30
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Berrouane
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">améliorer l'expression écrite et orale.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="red" data-module="Anglais" data-teacher="Mme Zerara" data-time="9h35 - 10h35" data-objective="Développer les compétences en anglais professionnel et technique, améliorer la compréhension et l'expression en anglais.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">🌐</div>
+                <span>Anglais</span>
+              </div>
+              <span class="badge-module">Langue</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                9h35 - 10h35
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Zerara
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">anglais professionnel & technique.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="green" data-module="Linux" data-teacher="Mr Djouadi" data-time="10h50 - 11h50" data-objective="Installer une distribution Linux, gérer les utilisateurs et groupes, gérer les disques et systèmes de fichiers, gérer les processus et services, déployer les principaux services Linux.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">🐧</div>
+                <span>Linux</span>
+              </div>
+              <span class="badge-module">Système</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                10h50 - 11h50
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mr Djouadi
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">administration de base Linux.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="green" data-module="Linux" data-teacher="Mr Djouadi" data-time="12h30 - 13h30" data-objective="Suite du cours - Approfondir la gestion des services, la configuration réseau, et l'administration avancée de Linux.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">🐧</div>
+                <span>Linux</span>
+              </div>
+              <span class="badge-module">Système</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                12h30 - 13h30
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mr Djouadi
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">Linux avancé & réseau.</span>
+            </p>
+          </article>
+        </div>
+
+        <!-- Mardi -->
+        <div class="day-panel grid" data-day-panel="mardi" data-day="mardi">
+          <article class="course-card" data-color="indigo" data-module="Programmation DevNet" data-teacher="Mme Amrani" data-time="8h30 - 9h30" data-objective="Maîtriser la programmation en C# avec le framework .NET, développer des applications WPF et ASP.NET, utiliser LINQ pour la manipulation de données.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">💻</div>
+                <span>Programmation DevNet</span>
+              </div>
+              <span class="badge-module">Dev .NET</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                8h30 - 9h30
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Amrani
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">bases C# / .NET.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="indigo" data-module="Programmation DevNet" data-teacher="Mme Amrani" data-time="9h35 - 10h35" data-objective="Suite - Approfondir la programmation orientée objet en C#, les services web (SOAP et REST), et les applications multithread.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">💻</div>
+                <span>Programmation DevNet</span>
+              </div>
+              <span class="badge-module">Dev .NET</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                9h35 - 10h35
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mme Amrani
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">POO et services web.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="crimson" data-module="Cryptographie" data-teacher="Mr Belkhous" data-time="10h50 - 11h50" data-objective="Comprendre les principes fondamentaux de la cryptographie, les algorithmes de chiffrement, les signatures numériques, et les applications pratiques en sécurité informatique.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">🔐</div>
+                <span>Cryptographie</span>
+              </div>
+              <span class="badge-module">Sécurité</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                10h50 - 11h50
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mr Belkhous
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">bases du chiffrement moderne.</span>
+            </p>
+          </article>
+
+          <article class="course-card" data-color="amber" data-module="Hygiène et Sécurité" data-teacher="Mr Belkhous" data-time="12h30 - 13h35" data-objective="Acquérir les connaissances essentielles en hygiène et sécurité au travail, prévention des risques informatiques, ergonomie des postes de travail, et conformité aux normes.">
+            <div class="course-top">
+              <div class="course-title">
+                <div class="course-icon">⚠️</div>
+                <span>Hygiène et Sécurité</span>
+              </div>
+              <span class="badge-module">Prévention</span>
+            </div>
+            <div class="course-meta">
+              <span class="time-pill">
+                <span class="dot"></span>
+                12h30 - 13h35
+              </span>
+              <span class="teacher">
+                <span class="avatar-dot"></span>
+                Mr Belkhous
+              </span>
+            </div>
+            <p class="objective-hint">
+              Objectif : <span class="link">prévention des risques & ergonomie.</span>
+            </p>
+          </article>
+        </div>
+
+        <!-- Mercredi -->
+        <div class="day-panel" data-day-panel="mercredi" data-day="mercredi">
+          <div class="empty-day">
+            <span class="icon">🌴</span>
+            <p>Aucun cours le mercredi. Profite de cette journée pour réviser, te reposer ou avancer sur tes projets.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- LÉGENDE -->
+      <section class="legend-section">
+        <div class="legend-title">Légende des modules</div>
+        <div class="legend-grid" id="legendGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div class="modal-title-block">
+          <div class="modal-title" id="modalTitle">
+            <span id="modalIcon">📚</span>
+            <span id="modalModule">Module</span>
+          </div>
+          <div class="modal-sub" id="modalSub">Professeur • Horaire</div>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="Fermer">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="modalObjective">Objet du cours.</p>
+      </div>
+      <div class="modal-footer">
+        <span class="pill-info" id="modalInfo">Premier semestre • ASRI 1 Groupe 7</span>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const coursesData = {
-            dimanche: [
-                {
-                    id: 1,
-                    nom: "Système d'exploitation Windows",
-                    professeur: "Mr Belkhous",
-                    horaire: "8h30 - 10h35",
-                    couleur: "teal",
-                    icone: "🖥️",
-                    objectif: "Comprendre la configuration du système d'exploitation Windows, l'installation et la mise à niveau, la gestion des applications et services, la gestion des fichiers et dossiers, la gestion des périphériques, et la maintenance du système."
-                },
-                {
-                    id: 2,
-                    nom: "Structure machine",
-                    professeur: "Mme Hassaim",
-                    horaire: "10h50 - 11h50",
-                    couleur: "blue",
-                    icone: "⚙️",
-                    objectif: "Acquérir les connaissances de base sur les fonctions et circuits logiques. Comprendre les circuits combinatoires, séquentiels, et leurs applications (additionneur, multiplexeur, compteurs, encodeurs, décodeurs)."
-                },
-                {
-                    id: 3,
-                    nom: "Structure machine",
-                    professeur: "Mme Hassaim",
-                    horaire: "12h30 - 13h30",
-                    couleur: "blue",
-                    icone: "⚙️",
-                    objectif: "Suite du cours précédent - Approfondir les concepts de logique combinatoire et séquentielle."
-                },
-                {
-                    id: 4,
-                    nom: "Bureautique",
-                    professeur: "Mme Hassaim",
-                    horaire: "13h35 - 14h35",
-                    couleur: "purple",
-                    icone: "📊",
-                    objectif: "Maîtriser les outils bureautiques modernes et leurs applications professionnelles."
-                }
-            ],
-            lundi: [
-                {
-                    id: 5,
-                    nom: "Technique d'expression",
-                    professeur: "Mme Berrouane",
-                    horaire: "8h30 - 9h30",
-                    couleur: "orange",
-                    icone: "🗣️",
-                    objectif: "Améliorer la communication orale et écrite, développer les capacités de présentation et d'argumentation."
-                },
-                {
-                    id: 6,
-                    nom: "Anglais",
-                    professeur: "Mme Zerara",
-                    horaire: "9h35 - 10h35",
-                    couleur: "red",
-                    icone: "🌐",
-                    objectif: "Développer les compétences en anglais professionnel et technique, améliorer la compréhension et l'expression en anglais."
-                },
-                {
-                    id: 7,
-                    nom: "Linux",
-                    professeur: "Mr Djouadi",
-                    horaire: "10h50 - 11h50",
-                    couleur: "green",
-                    icone: "🐧",
-                    objectif: "Installer une distribution Linux, gérer les utilisateurs et groupes, gérer les disques et systèmes de fichiers, gérer les processus et services, déployer les principaux services Linux."
-                },
-                {
-                    id: 8,
-                    nom: "Linux",
-                    professeur: "Mr Djouadi",
-                    horaire: "12h30 - 13h30",
-                    couleur: "green",
-                    icone: "🐧",
-                    objectif: "Suite du cours - Approfondir la gestion des services, la configuration réseau, et l'administration avancée de Linux."
-                }
-            ],
-            mardi: [
-                {
-                    id: 9,
-                    nom: "Programmation DevNet",
-                    professeur: "Mme Amrani",
-                    horaire: "8h30 - 9h30",
-                    couleur: "indigo",
-                    icone: "💻",
-                    objectif: "Maîtriser la programmation en C# avec le framework .NET, développer des applications WPF et ASP.NET, utiliser LINQ pour la manipulation de données."
-                },
-                {
-                    id: 10,
-                    nom: "Programmation DevNet",
-                    professeur: "Mme Amrani",
-                    horaire: "9h35 - 10h35",
-                    couleur: "indigo",
-                    icone: "💻",
-                    objectif: "Suite - Approfondir la programmation orientée objet en C#, les services web (SOAP et REST), et les applications multithread."
-                },
-                {
-                    id: 11,
-                    nom: "Cryptographie",
-                    professeur: "Mr Belkhous",
-                    horaire: "10h50 - 11h50",
-                    couleur: "crimson",
-                    icone: "🔐",
-                    objectif: "Comprendre les principes fondamentaux de la cryptographie, les algorithmes de chiffrement, les signatures numériques, et les applications pratiques en sécurité informatique."
-                },
-                {
-                    id: 12,
-                    nom: "Hygiène et Sécurité",
-                    professeur: "Mr Belkhous",
-                    horaire: "12h30 - 13h35",
-                    couleur: "amber",
-                    icone: "⚠️",
-                    objectif: "Acquérir les connaissances essentielles en hygiène et sécurité au travail, prévention des risques informatiques, ergonomie des postes de travail, et conformité aux normes."
-                }
-            ],
-            mercredi: []
-        };
+  <script>
+    // THÈME
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'light';
 
-        let currentDay = 'dimanche';
-        let selectedCourse = null;
+    html.setAttribute('data-theme', savedTheme);
+    themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-        function renderSchedule(day) {
-            const container = document.getElementById('scheduleContainer');
-            const courses = coursesData[day];
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    });
 
-            if (courses.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🎉</div>
-                        <div class="empty-state-text">Aucun cours ce jour-là !</div>
-                    </div>
-                `;
-                return;
-            }
+    // DONNÉES STATIQUES
+    const courseData = {
+      dimanche: [
+        { nom: 'Système d\'exploitation Windows', professeur: 'Mr Belkhous', horaire: '8h30 - 10h35', start: 8.5, end: 10.58 },
+        { nom: 'Structure machine', professeur: 'Mme Hassaim', horaire: '10h50 - 11h50', start: 10.83, end: 11.83 },
+        { nom: 'Structure machine', professeur: 'Mme Hassaim', horaire: '12h30 - 13h30', start: 12.5, end: 13.5 },
+        { nom: 'Bureautique', professeur: 'Mme Hassaim', horaire: '13h35 - 14h35', start: 13.58, end: 14.58 }
+      ],
+      lundi: [
+        { nom: 'Technique d\'expression', professeur: 'Mme Berrouane', horaire: '8h30 - 9h30', start: 8.5, end: 9.5 },
+        { nom: 'Anglais', professeur: 'Mme Zerara', horaire: '9h35 - 10h35', start: 9.58, end: 10.58 },
+        { nom: 'Linux', professeur: 'Mr Djouadi', horaire: '10h50 - 11h50', start: 10.83, end: 11.83 },
+        { nom: 'Linux', professeur: 'Mr Djouadi', horaire: '12h30 - 13h30', start: 12.5, end: 13.5 }
+      ],
+      mardi: [
+        { nom: 'Programmation DevNet', professeur: 'Mme Amrani', horaire: '8h30 - 9h30', start: 8.5, end: 9.5 },
+        { nom: 'Programmation DevNet', professeur: 'Mme Amrani', horaire: '9h35 - 10h35', start: 9.58, end: 10.58 },
+        { nom: 'Cryptographie', professeur: 'Mr Belkhous', horaire: '10h50 - 11h50', start: 10.83, end: 11.83 },
+        { nom: 'Hygiène et Sécurité', professeur: 'Mr Belkhous', horaire: '12h30 - 13h35', start: 12.5, end: 13.58 }
+      ],
+      mercredi: []
+    };
 
-            container.innerHTML = courses.map(course => `
-                <div class="course-card ${course.couleur}" data-course-id="${course.id}">
-                    <div class="course-time">${course.icone ? course.icone : '⏰'} ${course.horaire}</div>
-<div class="course-title">${course.nom}</div>
-<div class="course-professor">${course.professeur}</div>
-                </div>
-            `).join('');
+    const dayStats = {
+      dimanche: { courses: 4, hours: '6h05' },
+      lundi: { courses: 4, hours: '5h00' },
+      mardi: { courses: 4, hours: '5h05' },
+      mercredi: { courses: 0, hours: '0h00' }
+    };
 
-            document.querySelectorAll('.course-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const courseId = parseInt(card.dataset.courseId);
-                    openModal(courseId, day);
-                });
-            });
+    const colorLegend = [
+      { color: 'teal', name: 'Windows' },
+      { color: 'blue', name: 'Architecture' },
+      { color: 'purple', name: 'Outils' },
+      { color: 'orange', name: 'Communication' },
+      { color: 'red', name: 'Langue' },
+      { color: 'green', name: 'Système' },
+      { color: 'indigo', name: 'Dev .NET' },
+      { color: 'crimson', name: 'Sécurité' },
+      { color: 'amber', name: 'Prévention' }
+    ];
+
+    // POPULE VUE GLOBALE
+    const weekOverview = document.getElementById('weekOverview');
+    Object.entries(dayStats).forEach(([day, stats]) => {
+      const div = document.createElement('div');
+      div.className = 'day-stat';
+      div.innerHTML = `
+        <div class="day-stat-name">${day.charAt(0).toUpperCase() + day.slice(1)}</div>
+        <div class="day-stat-courses">${stats.courses}</div>
+        <div class="day-stat-hours">${stats.hours}</div>
+      `;
+      div.addEventListener('click', () => {
+        document.querySelectorAll('.day-tab').forEach(tab => {
+          if (tab.getAttribute('data-day') === day) tab.click();
+        });
+      });
+      weekOverview.appendChild(div);
+    });
+
+    // POPULE LÉGENDE
+    const legendGrid = document.getElementById('legendGrid');
+    colorLegend.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'legend-item';
+      div.innerHTML = `
+        <div class="legend-dot" data-color="${item.color}"></div>
+        <span>${item.name}</span>
+      `;
+      legendGrid.appendChild(div);
+    });
+
+    // NAVIGATION JOURS
+    const tabs = document.querySelectorAll('.day-tab');
+    const panels = document.querySelectorAll('.day-panel');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const day = tab.getAttribute('data-day');
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        panels.forEach((panel) => {
+          if (panel.getAttribute('data-day-panel') === day) {
+            panel.classList.add('active');
+          } else {
+            panel.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // AUJOURD'HUI / PROCHAIN COURS
+    const todayBtn = document.getElementById('todayBtn');
+
+    function getNextCourse() {
+      const now = new Date();
+      const currentHour = now.getHours() + now.getMinutes() / 60;
+      const dayOfWeek = now.getDay();
+      
+      const dayMap = { 0: 'dimanche', 1: 'lundi', 2: 'mardi', 3: 'mercredi', 4: 'jeudi', 5: 'vendredi', 6: 'samedi' };
+      const days = ['dimanche', 'lundi', 'mardi', 'mercredi'];
+      let currentDay = dayMap[dayOfWeek];
+
+      if (currentDay === 'jeudi' || currentDay === 'vendredi' || currentDay === 'samedi') {
+        currentDay = 'dimanche';
+      }
+
+      let nextDay = currentDay;
+      let nextCourse = null;
+
+      for (let i = 0; i < 4; i++) {
+        const day = days[(days.indexOf(nextDay) + i) % 4];
+        const courses = courseData[day] || [];
+        
+        if (day === currentDay) {
+          nextCourse = courses.find(c => c.start >= currentHour);
+        } else {
+          nextCourse = courses[0];
         }
 
-        function openModal(courseId, day, card) {
-    const courses = coursesData[day];
-    const course = courses.find(c => c.id === courseId);
+        if (nextCourse) {
+          nextDay = day;
+          break;
+        }
+      }
 
-    if (!course) return;
+      return { day: nextDay, course: nextCourse };
+    }
 
-    document.getElementById('modalTitle').textContent = course.nom;
-    document.getElementById('modalTime').textContent = `${course.icone ? course.icone : '⏰'} ${course.horaire}`;
-    document.getElementById('modalProfessor').textContent = `${course.professeur}`;
-    document.getElementById('modalObjectif').textContent = course.objectif;
+    todayBtn.addEventListener('click', () => {
+      const { day, course } = getNextCourse();
+      const tab = document.querySelector(`.day-tab[data-day="${day}"]`);
+      if (tab) tab.click();
 
-    const modal = document.getElementById('modal');
-    const modalContent = modal.querySelector('.modal-content');
-    modal.classList.add('active');
-
-    modalContent.style.opacity = 0;
-    modalContent.style.transform = 'translateY(42px) scale(0.98)';
-    setTimeout(() => {
-        modalContent.style.transition = 'opacity 0.47s var(--ease-standard), transform 0.47s var(--ease-standard)';
-        modalContent.style.opacity = 1;
-        modalContent.style.transform = 'translateY(0) scale(1)';
-    }, 10);
-}
-
-function closeModal() {
-    const modal = document.getElementById('modal');
-    const modalContent = modal.querySelector('.modal-content');
-    modalContent.style.transition = 'opacity 0.28s var(--ease-standard), transform 0.32s var(--ease-standard)';
-    modalContent.style.opacity = 0;
-    modalContent.style.transform = 'translateY(44px) scale(0.97)';
-    setTimeout(() => {
-        modal.classList.remove('active');
-        modalContent.style.transition = '';
-        modalContent.style.opacity = '';
-        modalContent.style.transform = '';
-    }, 320);
-}
-
-        function animateNavHighlight(prevTab, newTab) {
-    if (!prevTab || !newTab) return;
-    prevTab.style.transition = 'background 0.45s, color 0.45s';
-    newTab.style.transition = 'background 0.45s, color 0.45s';
-}
-
-const navTabs = document.querySelectorAll('.nav-tab');
-navTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        const prevTab = document.querySelector('.nav-tab.active');
-        if (prevTab) prevTab.classList.remove('active');
-        tab.classList.add('active');
-        animateNavHighlight(prevTab, tab);
-        currentDay = tab.dataset.day;
-        document.getElementById('scheduleContainer').style.opacity = 0;
+      if (course) {
         setTimeout(() => {
-            renderSchedule(currentDay);
-
-// Animation keyframes
-const style = document.createElement('style');
-style.innerHTML = `
-@keyframes fade-slide-up {
-    from { opacity: 0; transform: translateY(38px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-`;
-document.head.appendChild(style);
-// Footer (minimal/empty)
-const footer = document.createElement('footer');
-footer.style.width = '100%';
-footer.style.height = '32px';
-footer.style.background = 'linear-gradient(90deg, #eafcfc 0%, #fff2e3 100%)';
-footer.style.borderRadius = '12px';
-footer.style.margin = '42px auto 0 auto';
-footer.style.boxShadow = '0 1px 18px rgba(205,242,255,0.09)';
-footer.style.opacity = '0.37';
-footer.setAttribute('aria-hidden', 'true'); // accessibility, since it's only visual
-footer.innerHTML = '';
-document.body.appendChild(footer);
-
-            setTimeout(() => {
-                document.getElementById('scheduleContainer').style.transition = 'opacity 0.62s';
-                document.getElementById('scheduleContainer').style.opacity = 1;
-            }, 100);
-        }, 200);
-    });
-});
-
-        document.getElementById('modalClose').addEventListener('click', closeModal);
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target.id === 'modal') {
-                closeModal();
+          const card = document.querySelector(`.course-card:has(> div:first-child > div:first-child > span:nth-child(2):contains("${course.nom}"))`);
+          const allCards = document.querySelectorAll('.course-card');
+          allCards.forEach(c => c.classList.remove('next-course'));
+          allCards.forEach(c => {
+            if (c.getAttribute('data-module') === course.nom && c.getAttribute('data-time') === course.horaire) {
+              c.classList.add('next-course');
             }
-        });
+          });
+        }, 100);
+      }
+    });
 
-        renderSchedule(currentDay);
-    </script>
+    // MODAL
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalClose = document.getElementById('modalClose');
+    const modalModule = document.getElementById('modalModule');
+    const modalSub = document.getElementById('modalSub');
+    const modalObjective = document.getElementById('modalObjective');
+    const modalIcon = document.getElementById('modalIcon');
+
+    function openModal(card) {
+      const moduleName = card.getAttribute('data-module');
+      const teacher = card.getAttribute('data-teacher');
+      const time = card.getAttribute('data-time');
+      const objective = card.getAttribute('data-objective');
+      const iconEl = card.querySelector('.course-icon');
+      const icon = iconEl ? iconEl.textContent.trim() : '📚';
+
+      modalModule.textContent = moduleName;
+      modalSub.textContent = teacher + ' • ' + time;
+      modalObjective.textContent = objective;
+      modalIcon.textContent = icon;
+
+      modalBackdrop.classList.add('open');
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('open');
+    }
+
+    document.querySelectorAll('.course-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        openModal(card);
+      });
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
 </body>
 </html>
