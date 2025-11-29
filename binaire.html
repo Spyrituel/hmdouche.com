@@ -332,6 +332,42 @@
     </style>
 </head>
 <body>
+    <!-- NAVIGATION TOP BUTTONS -->
+<style>
+  .top-nav-buttons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, #0369a1, #015a9d, #4f46e5);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-nav-buttons a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .top-nav-buttons a:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+  }
+  body { padding-top: 50px; }
+</style>
+
+<div class="top-nav-buttons">
+  <a href="index.html">◀️ Revenir au Planning</a>
+  <span style="color: white; font-weight: 600;">Révision Binaire S1</span>
+</div>
+
     <div class="container">
         <div class="header">
             <h1>⚙️ BINARY CONVERSION STUDIO</h1>
