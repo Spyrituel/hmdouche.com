@@ -9,7 +9,6 @@
             --primary: #2c3e50;
             --accent: #e74c3c;
             --success: #27ae60;
-            --warning: #f39c12;
             --light: #ecf0f1;
             --white: #ffffff;
             --gray: #95a5a6;
@@ -229,8 +228,14 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .single-col {
@@ -301,23 +306,462 @@
             animation: slideIn 0.3s ease;
         }
 
+        .team-member-name {
+            font-weight: 500;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .team-member button {
+            background: #e74c3c;
+            padding: 5px 10px;
+            font-size: 0.85em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .team-member button:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0392b;
+        }
+
+        .program-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .program-section h2 {
+            color: var(--primary);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .program-editor {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 15px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 1em;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .program-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            min-height: 250px;
+            border-left: 4px solid var(--accent);
+            line-height: 1.6;
+        }
+
+        .save-btn-program {
+            background: var(--success);
+            margin-top: 10px;
+        }
+
+        .save-btn-program:hover {
+            background: #229954;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent) 0%, #e67e22 100%);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Yennayer 2025/2026</h1>
-            <p>Gestion d'Événement - Planification Collaborative</p>
+            <h1>🎉 Yennayer 2025/2026</h1>
+            <p>Gestion d'Événement - École de Management</p>
         </header>
+
+        <div class="tabs-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="switchTab('equipes')">👥 Équipes</button>
+                <button class="tab-button" onclick="switchTab('achat')">📋 Achat</button>
+                <button class="tab-button" onclick="switchTab('programme')">📅 Programme</button>
+            </div>
+
+            <!-- TAB ÉQUIPES -->
+            <div id="equipes-tab" class="tab-content active">
+                <div class="teams-section">
+                    <h2>👥 Gestion des Équipes</h2>
+                    
+                    <div class="teams-grid">
+                        <!-- Guides -->
+                        <div class="team-card">
+                            <div class="team-header">
+                                <h3>📍 Guides de l'Événement</h3>
+                            </div>
+                            <div class="add-form">
+                                <input type="text" class="team-input" placeholder="Ajouter un guide..." data-team="guides">
+                                <button onclick="addTeamMember('guides')">Ajouter</button>
+                            </div>
+                            <ul class="team-list" id="guides-list"></ul>
+                        </div>
+
+                        <!-- Responsables de Stands -->
+                        <div class="team-card">
+                            <div class="team-header">
+                                <h3>🏪 Responsables des Stands</h3>
+                            </div>
+                            <div class="add-form">
+                                <input type="text" class="team-input" placeholder="Ajouter un responsable..." data-team="stands">
+                                <button onclick="addTeamMember('stands')">Ajouter</button>
+                            </div>
+                            <ul class="team-list" id="stands-list"></ul>
+                        </div>
+
+                        <!-- Responsables des Ateliers -->
+                        <div class="team-card">
+                            <div class="team-header">
+                                <h3>🎨 Responsables des Ateliers</h3>
+                            </div>
+                            <div class="add-form">
+                                <input type="text" class="team-input" placeholder="Ajouter un responsable..." data-team="ateliers">
+                                <button onclick="addTeamMember('ateliers')">Ajouter</button>
+                            </div>
+                            <ul class="team-list" id="ateliers-list"></ul>
+                        </div>
+
+                        <!-- Défilé Mode Traditionnel -->
+                        <div class="team-card">
+                            <div class="team-header">
+                                <h3>👗 Défilé Mode Traditionnel</h3>
+                            </div>
+                            <div class="add-form">
+                                <input type="text" class="team-input" placeholder="Ajouter une participante..." data-team="defile">
+                                <button onclick="addTeamMember('defile')">Ajouter</button>
+                            </div>
+                            <ul class="team-list" id="defile-list"></ul>
+                        </div>
+
+                        <!-- Équipe de Sécurité -->
+                        <div class="team-card">
+                            <div class="team-header">
+                                <h3>🔒 Équipe de Sécurité</h3>
+                            </div>
+                            <div class="add-form">
+                                <input type="text" class="team-input" placeholder="Ajouter un membre..." data-team="securite">
+                                <button onclick="addTeamMember('securite')">Ajouter</button>
+                            </div>
+                            <ul class="team-list" id="securite-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB ACHAT -->
+            <div id="achat-tab" class="tab-content">
+                <div class="main-content single-col">
+                    <div class="card">
+                        <h2>📋 Liste d'Achat</h2>
+                
+                <div class="add-form">
+                    <input type="text" id="itemInput" placeholder="Ajouter un nouvel article...">
+                    <button onclick="addItem()">Ajouter</button>
+                </div>
+
+                <ul class="shopping-list" id="shoppingList"></ul>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3 id="totalCount">0</h3>
+                        <p>Total d'articles</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="checkedCount">0</h3>
+                        <p>Articles cochés</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="remainingCount">0</h3>
+                        <p>À faire</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- TAB PROGRAMME -->
+            <div id="programme-tab" class="tab-content">
+                <div class="main-content single-col">
+                    <div class="card">
+                        <h2>📅 Programme de l'Événement</h2>
+                        <div class="program-editor">
+                            <textarea id="programInput" placeholder="Décrivez le programme de l'événement...Exemple:\n09h00 - 09h30 : Accueil et enregistrement\n10h00 - 11h00 : Ouverture officielle\n..."></textarea>
+                            <button class="save-btn-program" onclick="saveProgram()">Enregistrer le programme</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AFFICHAGE DU PROGRAMME -->
+                <div class="program-section">
+                    <h2>📝 Programme Définitif</h2>
+                    <div class="program-display" id="programDisplay">Programme non défini...</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🌍 Événement Yennayer 2025/2026 - Célébration du Nouvel An Amazigh</p>
+        </footer>
     </div>
+
+    <script>
+        function switchTab(tabName) {
+            const allTabs = document.querySelectorAll('.tab-content');
+            allTabs.forEach(tab => tab.classList.remove('active'));
+            const allButtons = document.querySelectorAll('.tab-button');
+            allButtons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadData() {
+            const savedShoppingList = localStorage.getItem('shoppingList');
+            if (savedShoppingList) {
+                document.getElementById('shoppingList').innerHTML = savedShoppingList;
+            }
+            const programDisplay = document.getElementById('programDisplay');
+            const programInput = document.getElementById('programInput');
+            const savedProgram = localStorage.getItem('eventProgram');
+            if (savedProgram) {
+                programInput.value = savedProgram;
+                programDisplay.textContent = savedProgram;
+            }
+            const teams = ['guides', 'stands', 'ateliers', 'defile', 'securite'];
+            teams.forEach(team => {
+                loadTeamMembers(team);
+            });
+            updateStats();
+        }
+
+        function addTeamMember(teamName) {
+            const input = document.querySelector(`.team-input[data-team="${teamName}"]`);
+            const text = input.value.trim();
+            if (text === '') {
+                alert('Veuillez entrer un nom');
+                return;
+            }
+            const list = document.getElementById(`${teamName}-list`);
+            const li = document.createElement('li');
+            li.className = 'team-member';
+            li.innerHTML = `
+                <div class="team-member-name">${text}</div>
+                <button onclick="deleteTeamMember(this, '${teamName}')">x</button>
+            `;
+            list.appendChild(li);
+            input.value = '';
+            input.focus();
+            saveTeamMembers(teamName);
+        }
+
+        function deleteTeamMember(btn, teamName) {
+            const item = btn.closest('.team-member');
+            item.style.opacity = '0';
+            setTimeout(() => {
+                item.remove();
+                saveTeamMembers(teamName);
+            }, 300);
+        }
+
+        function saveTeamMembers(teamName) {
+            const list = document.getElementById(`${teamName}-list`);
+            localStorage.setItem(`team_${teamName}`, list.innerHTML);
+        }
+
+        function loadTeamMembers(teamName) {
+            const savedMembers = localStorage.getItem(`team_${teamName}`);
+            if (savedMembers) {
+                document.getElementById(`${teamName}-list`).innerHTML = savedMembers;
+            }
+        }
+
+        function addItem() {
+            const input = document.getElementById('itemInput');
+            const text = input.value.trim();
+            if (text === '') {
+                alert('Veuillez entrer un article');
+                return;
+            }
+            const list = document.getElementById('shoppingList');
+            const li = document.createElement('li');
+            li.className = 'shopping-item';
+            li.innerHTML = `
+                <div class="item-content">
+                    <div class="item-name">${text}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="check-btn" onclick="toggleCheck(this)">OK</button>
+                    <button class="delete-btn" onclick="deleteItem(this)">x</button>
+                </div>
+            `;
+            list.appendChild(li);
+            input.value = '';
+            input.focus();
+            saveShoppingList();
+            updateStats();
+        }
+
+        function toggleCheck(btn) {
+            const item = btn.closest('.shopping-item');
+            item.classList.toggle('checked');
+            saveShoppingList();
+            updateStats();
+        }
+
+        function deleteItem(btn) {
+            const item = btn.closest('.shopping-item');
+            item.style.opacity = '0';
+            setTimeout(() => {
+                item.remove();
+                saveShoppingList();
+                updateStats();
+            }, 300);
+        }
+
+        function saveShoppingList() {
+            const list = document.getElementById('shoppingList');
+            localStorage.setItem('shoppingList', list.innerHTML);
+        }
+
+        function saveProgram() {
+            const program = document.getElementById('programInput').value;
+            localStorage.setItem('eventProgram', program);
+            document.getElementById('programDisplay').textContent = program;
+            alert('Programme enregistre avec succes!');
+        }
+
+        function updateStats() {
+            const items = document.querySelectorAll('.shopping-item');
+            const checkedItems = document.querySelectorAll('.shopping-item.checked');
+            document.getElementById('totalCount').textContent = items.length;
+            document.getElementById('checkedCount').textContent = checkedItems.length;
+            document.getElementById('remainingCount').textContent = items.length - checkedItems.length;
+        }
+
+        document.getElementById('itemInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addItem();
+            }
+        });
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.classList.contains('team-input')) {
+                const teamName = e.target.dataset.team;
+                addTeamMember(teamName);
+            }
+        });
+
+        window.addEventListener('load', loadData);
+    </script>
 </body>
 </html>
