@@ -10,6 +10,7 @@
     .header { text-align: center; margin-bottom: 30px; }
     .header h1 { font-size: 2.5em; color: white; margin: 10px 0; }
     .header p { color: #e8eef7; font-size: 1.1em; }
+    .status { text-align: center; color: #27ae60; font-weight: bold; margin: 10px 0; }
     .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
     .tabs button { padding: 12px 20px; background: white; color: #667eea; border: none; border-radius: 20px; cursor: pointer; font-size: 1em; font-weight: bold; transition: all 0.3s; }
     .tabs button.active { background: #667eea; color: white; }
@@ -33,19 +34,18 @@
   </style>
 </head>
 <body>
-
   <div class="header">
     <h1>🎉 YENNAYER 2025/2026</h1>
     <p>Gestion d'Événement - INSIM</p>
-    <p style="color: #27ae60; font-weight: bold;">✅ Sauvegarde locales activée</p>
+    <div class="status">⏳ Connexion Firebase...</div>
   </div>
-
+  
   <div class="tabs">
     <button class="active" onclick="switchTab('equipes')">👥 Équipes</button>
     <button onclick="switchTab('achat')">📋 Achat</button>
     <button onclick="switchTab('programme')">📅 Programme</button>
   </div>
-
+  
   <div class="content">
     <div id="equipes" class="section active">
       <h2>👥 Gestion des Équipes</h2>
@@ -90,7 +90,7 @@
         <ul id="securiteList"></ul>
       </div>
     </div>
-
+    
     <div id="achat" class="section">
       <h2>📋 Gestion des Achats</h2>
       <div class="category">
@@ -102,78 +102,144 @@
         <ul id="articlesList"></ul>
       </div>
     </div>
-
+    
     <div id="programme" class="section">
       <h2>📅 Programme de l'événement</h2>
       <p>Éditez le programme ci-dessous:</p>
       <textarea id="programmeText"></textarea>
-      <button class="add" style="margin-top: 10px; width: 100%;" onclick="saveProgram()">Sauvegarder</button>
+      <button class="add" style="margin-top: 10px;" onclick="saveProgram()">Sauvegarder</button>
     </div>
   </div>
-
+  
   <div class="footer">
     <p>🌍 Événement Yennayer 2025/2026 - Célébration du Nouvel An Amazigh</p>
   </div>
 
-<script>
-const categories = ['guides', 'stands', 'ateliers', 'defile', 'securite', 'articles'];
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+  <script>
+    // Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0A8uVABhbLUfRLCGFMwPrFrGRXjC8B-E",
+      authDomain: "analys2-56578.firebaseapp.com",
+      databaseURL: "https://analys2-56578-default-rtdb.firebaseio.com",
+      projectId: "analys2-56578",
+      storageBucket: "analys2-56578.appspot.com",
+      messagingSenderId: "1053703268833",
+      appId: "1:1053703268833:web:c8b5c7e5d8f9c2e4a1b2c3"
+    };
 
-function init() {
-  loadData();
-  document.getElementById('programmeText').value = localStorage.getItem('programme') || '';
-}
+    // Initialiser Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+    const categories = ['guides', 'stands', 'ateliers', 'defile', 'securite', 'articles'];
 
-function loadData() {
-  categories.forEach(cat => {
-    const items = JSON.parse(localStorage.getItem(cat) || '[]');
-    renderList(cat, items);
-  });
-}
+    // Authentification anonyme
+    auth.signInAnonymously().then(() => {
+      document.querySelector('.status').textContent = '✅ Connecté Firebase';
+      init();
+    }).catch(error => {
+      console.error('Erreur authentification:', error);
+      document.querySelector('.status').textContent = '❌ Erreur Firebase';
+    });
 
-function renderList(cat, items) {
-  const ul = document.getElementById(cat + 'List');
-  ul.innerHTML = '';
-  items.forEach((item, idx) => {
-    const li = document.createElement('li');
-    li.innerHTML = `<span>${item}</span><button class="delete" onclick="deleteItem('${cat}', ${idx})">✕</button>`;
-    ul.appendChild(li);
-  });
-}
+    function init() {
+      loadDataFromFirebase();
+      setupListeners();
+    }
 
-function addItem(cat) {
-  const input = document.getElementById(cat);
-  const value = input.value.trim();
-  if (!value) { alert('Veuillez entrer une valeur'); return; }
-  
-  const items = JSON.parse(localStorage.getItem(cat) || '[]');
-  items.push(value);
-  localStorage.setItem(cat, JSON.stringify(items));
-  input.value = '';
-  loadData();
-}
+    function loadDataFromFirebase() {
+      // Charger les données existantes
+      categories.forEach(cat => {
+        database.ref(cat).once('value', snapshot => {
+          const items = snapshot.val() || {};
+          renderList(cat, items);
+        });
+      });
 
-function deleteItem(cat, idx) {
-  const items = JSON.parse(localStorage.getItem(cat) || '[]');
-  items.splice(idx, 1);
-  localStorage.setItem(cat, JSON.stringify(items));
-  loadData();
-}
+      // Charger le programme
+      database.ref('programme').once('value', snapshot => {
+        const text = snapshot.val() || '';
+        document.getElementById('programmeText').value = text;
+      });
+    }
 
-function saveProgram() {
-  const text = document.getElementById('programmeText').value;
-  localStorage.setItem('programme', text);
-  alert('📅 Sauvegardé!');
-}
+    function setupListeners() {
+      // Ajouter des listeners pour les mises à jour en temps réel
+      categories.forEach(cat => {
+        database.ref(cat).on('child_added', snapshot => {
+          const items = {};
+          database.ref(cat).once('value', s => {
+            s.forEach(child => {
+              items[child.key] = child.val();
+            });
+            renderList(cat, items);
+          });
+        });
 
-function switchTab(tab) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
-  event.target.classList.add('active');
-}
+        database.ref(cat).on('child_removed', snapshot => {
+          const items = {};
+          database.ref(cat).once('value', s => {
+            s.forEach(child => {
+              items[child.key] = child.val();
+            });
+            renderList(cat, items);
+          });
+        });
+      });
 
-init();
-</script>
+      // Listener pour le programme
+      database.ref('programme').on('value', snapshot => {
+        const text = snapshot.val() || '';
+        document.getElementById('programmeText').value = text;
+      });
+    }
 
+    function renderList(cat, items) {
+      const ul = document.getElementById(cat + 'List');
+      ul.innerHTML = '';
+      for (const key in items) {
+        if (items.hasOwnProperty(key)) {
+          const li = document.createElement('li');
+          li.innerHTML = `<span>${items[key]}</span><button class="delete" onclick="deleteItem('${cat}', '${key}')">✕</button>`;
+          ul.appendChild(li);
+        }
+      }
+    }
+
+    function addItem(cat) {
+      const input = document.getElementById(cat);
+      const value = input.value.trim();
+      if (!value) { alert('Veuillez entrer une valeur'); return; }
+      
+      // Ajouter à Firebase avec une clé auto-générée
+      const newKey = database.ref(cat).push().key;
+      const updates = {};
+      updates[cat + '/' + newKey] = value;
+      database.ref().update(updates).then(() => {
+        input.value = '';
+      }).catch(error => console.error('Erreur d\'ajout:', error));
+    }
+
+    function deleteItem(cat, key) {
+      database.ref(cat + '/' + key).remove().catch(error => console.error('Erreur suppression:', error));
+    }
+
+    function saveProgram() {
+      const text = document.getElementById('programmeText').value;
+      database.ref('programme').set(text).then(() => {
+        alert('📅 Sauvegardé Firebase!');
+      }).catch(error => console.error('Erreur sauvegarde programme:', error));
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
 </body>
 </html>
