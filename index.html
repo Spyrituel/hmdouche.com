@@ -4,29 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yennayer 2025/2026 - Gestion d'Événement</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; min-height: 100vh; }
     .header { text-align: center; margin-bottom: 30px; }
     .header h1 { font-size: 2.5em; color: white; margin: 10px 0; }
     .header p { color: #e8eef7; font-size: 1.1em; }
-    .sync-status { text-align: center; color: white; font-size: 1em; margin-bottom: 20px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 5px; }
     .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
     .tabs button { padding: 12px 20px; background: white; color: #667eea; border: none; border-radius: 20px; cursor: pointer; font-size: 1em; font-weight: bold; transition: all 0.3s; }
     .tabs button.active { background: #667eea; color: white; }
     .tabs button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
     .content { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     .section { display: none; }
-    .section.active { display: block; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .section.active { display: block; }
     .section h2 { font-size: 1.8em; color: #667eea; margin: 20px 0 15px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
     .category { background: #f8f9ff; padding: 15px; border-left: 4px solid #667eea; margin: 15px 0; border-radius: 5px; }
     .category h3 { font-size: 1.2em; color: #667eea; margin-bottom: 10px; }
     .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
     input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; flex: 1; }
-    button.add { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+    button.add { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
     button.add:hover { background: #764ba2; }
     ul { list-style: none; }
     li { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 5px; margin: 8px 0; }
@@ -41,7 +37,7 @@
   <div class="header">
     <h1>🎉 YENNAYER 2025/2026</h1>
     <p>Gestion d'Événement - INSIM</p>
-    <div class="sync-status" id="syncStatus">🔄 Connexion à Firebase...</div>
+    <p style="color: #27ae60; font-weight: bold;">✅ Sauvegarde locales activée</p>
   </div>
 
   <div class="tabs">
@@ -120,97 +116,53 @@
   </div>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBRrKHPxhjlVn3x2sNKoaKlv5dVP3SmhXA",
-  authDomain: "analys2-56578.firebaseapp.com",
-  projectId: "analys2-56578",
-  storageBucket: "analys2-56578.appspot.com",
-  messagingSenderId: "661882699629",
-  appId: "1:661882699629:web:e2d69c2c47df7d29e3e2d5",
-  databaseURL: "https://analys2-56578-default-rtdb.firebaseio.com"
-};
-
 const categories = ['guides', 'stands', 'ateliers', 'defile', 'securite', 'articles'];
-let db = null;
-let isReady = false;
 
-setTimeout(() => {
-  console.log('Firebase: Initializing...');
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  db = firebase.database();
-  isReady = true;
-  document.getElementById('syncStatus').textContent = '✅ Firebase synchronisé';
-  loadAllData();
-  console.log('Firebase: Ready!');
-}, 500);
-
-function loadAllData() {
-  categories.forEach(cat => loadData(cat));
-  loadProgram();
+function init() {
+  loadData();
+  document.getElementById('programmeText').value = localStorage.getItem('programme') || '';
 }
 
-function loadData(category) {
-  if (!isReady || !db) return;
-  db.ref('items/' + category).on('value', snapshot => {
-    const items = [];
-    snapshot.forEach(child => items.push(child.val()));
-    renderList(category, items);
+function loadData() {
+  categories.forEach(cat => {
+    const items = JSON.parse(localStorage.getItem(cat) || '[]');
+    renderList(cat, items);
   });
 }
 
-function loadProgram() {
-  if (!isReady || !db) return;
-  db.ref('programme').on('value', snapshot => {
-    document.getElementById('programmeText').value = snapshot.val() || '';
-  });
-}
-
-function renderList(category, items) {
-  const list = document.getElementById(category + 'List');
-  if (!list) return;
-  list.innerHTML = '';
+function renderList(cat, items) {
+  const ul = document.getElementById(cat + 'List');
+  ul.innerHTML = '';
   items.forEach((item, idx) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span>${item}</span><button class="delete" onclick="deleteItem('${category}', ${idx})">✕</button>`;
-    list.appendChild(li);
+    li.innerHTML = `<span>${item}</span><button class="delete" onclick="deleteItem('${cat}', ${idx})">✕</button>`;
+    ul.appendChild(li);
   });
 }
 
-function addItem(category) {
-  if (!isReady || !db) {
-    alert('❌ Firebase initializing... Try again in a moment');
-    return;
-  }
-  const input = document.getElementById(category);
+function addItem(cat) {
+  const input = document.getElementById(cat);
   const value = input.value.trim();
-  if (!value) { alert('Please enter a value'); return; }
-  db.ref('items/' + category).push().set(value).then(() => {
-    input.value = '';
-  }).catch(err => alert('Error: ' + err.message));
+  if (!value) { alert('Veuillez entrer une valeur'); return; }
+  
+  const items = JSON.parse(localStorage.getItem(cat) || '[]');
+  items.push(value);
+  localStorage.setItem(cat, JSON.stringify(items));
+  input.value = '';
+  loadData();
 }
 
-function deleteItem(category, idx) {
-  if (!isReady || !db) return;
-  db.ref('items/' + category).once('value', snapshot => {
-    const items = [];
-    snapshot.forEach(child => items.push({key: child.key, val: child.val()}));
-    if (items[idx]) {
-      db.ref('items/' + category + '/' + items[idx].key).remove();
-    }
-  });
+function deleteItem(cat, idx) {
+  const items = JSON.parse(localStorage.getItem(cat) || '[]');
+  items.splice(idx, 1);
+  localStorage.setItem(cat, JSON.stringify(items));
+  loadData();
 }
 
 function saveProgram() {
-  if (!isReady || !db) {
-    alert('❌ Firebase initializing...');
-    return;
-  }
   const text = document.getElementById('programmeText').value;
-  db.ref('programme').set(text).then(() => {
-    alert('📅 Saved!');
-  }).catch(err => alert('Error: ' + err.message));
+  localStorage.setItem('programme', text);
+  alert('📅 Sauvegardé!');
 }
 
 function switchTab(tab) {
@@ -219,6 +171,8 @@ function switchTab(tab) {
   document.getElementById(tab).classList.add('active');
   event.target.classList.add('active');
 }
+
+init();
 </script>
 
 </body>
