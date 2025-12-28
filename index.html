@@ -6,178 +6,37 @@
 <title>Yennayer 2025/2026 - Gestion d'Événement</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f2f5;
-  padding: 20px;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.header h1 {
-  font-size: 2.5em;
-  color: #2c3e50;
-  margin: 10px 0;
-}
-
-.header p {
-  color: #7f8c8d;
-  font-size: 1.1em;
-}
-
-.sync-status {
-  text-align: center;
-  color: #27ae60;
-  font-size: 0.9em;
-  margin-bottom: 20px;
-}
-
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.tabs button {
-  padding: 12px 20px;
-  background: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: bold;
-}
-
-.tabs button.active {
-  background: #c0392b;
-}
-
-.tabs button:hover {
-  background: #c0392b;
-}
-
-.content {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
-
-.section h2 {
-  font-size: 1.8em;
-  color: #2c3e50;
-  margin: 20px 0 15px;
-  border-bottom: 3px solid #e74c3c;
-  padding-bottom: 10px;
-}
-
-.category {
-  background: #f9f9f9;
-  padding: 15px;
-  border-left: 4px solid #e74c3c;
-  margin: 15px 0;
-  border-radius: 5px;
-}
-
-.category h3 {
-  font-size: 1.2em;
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.input-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-input {
-  padding: 10px;
-  border: 1px solid #bdc3c7;
-  border-radius: 5px;
-  font-size: 1em;
-  flex: 1;
-}
-
-button.add {
-  padding: 10px 20px;
-  background: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button.add:hover {
-  background: #c0392b;
-}
-
-ul {
-  list-style: none;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background: white;
-  border: 1px solid #ecf0f1;
-  border-radius: 5px;
-  margin: 8px 0;
-}
-
-button.delete {
-  padding: 5px 15px;
-  background: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button.delete:hover {
-  background: #c0392b;
-}
-
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #bdc3c7;
-  border-radius: 5px;
-  font-family: monospace;
-  font-size: 0.9em;
-  min-height: 200px;
-  margin-top: 10px;
-}
-
-.footer {
-  text-align: center;
-  margin-top: 30px;
-  color: #7f8c8d;
-  font-size: 0.9em;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; min-height: 100vh; }
+.header { text-align: center; margin-bottom: 30px; color: white; }
+.header h1 { font-size: 2.5em; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+.header p { font-size: 1.1em; opacity: 0.9; }
+.sync-status { text-align: center; font-size: 1em; margin-bottom: 20px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; color: white; }
+.sync-status.online { background: rgba(46, 204, 113, 0.3); }
+.sync-status.offline { background: rgba(231, 76, 60, 0.3); }
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+.tabs button { padding: 12px 20px; background: rgba(255,255,255,0.9); color: #667eea; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+.tabs button:hover, .tabs button.active { background: white; transform: translateY(-2px); }
+.content { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 900px; margin: 0 auto; }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.section h2 { font-size: 1.8em; color: #2c3e50; margin: 20px 0 15px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+.category { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 15px; border-left: 4px solid #667eea; margin: 15px 0; border-radius: 8px; }
+.category h3 { font-size: 1.2em; color: #2c3e50; margin-bottom: 10px; }
+.input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+input { padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px; font-size: 1em; flex: 1; }
+input:focus { outline: none; border-color: #667eea; }
+button.add { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+button.add:hover { transform: translateY(-2px); }
+ul { list-style: none; }
+li { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border: 1px solid #ecf0f1; border-radius: 5px; margin: 8px 0; }
+button.delete { padding: 5px 15px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; }
+button.delete:hover { background: #c0392b; }
+textarea { width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px; font-family: monospace; min-height: 200px; margin-top: 10px; }
+.footer { text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8); }
 </style>
 </head>
 <body>
@@ -185,7 +44,7 @@ textarea {
 <div class="header">
   <h1>🎉 YENNAYER 2025/2026</h1>
   <p>Gestion d'Événement - INSIM</p>
-  <div class="sync-status" id="syncStatus">🔄 Connexion à Firebase...</div>
+  <div class="sync-status offline" id="syncStatus">⏳ Initialisation...</div>
 </div>
 
 <div class="tabs">
@@ -195,14 +54,13 @@ textarea {
 </div>
 
 <div class="content">
-  <!-- Section Équipes -->
   <div id="equipes" class="section active">
     <h2>👥 Gestion des Équipes</h2>
     
     <div class="category">
       <h3>📍 Guides</h3>
       <div class="input-group">
-        <input type="text" id="guides" placeholder="Nom...">
+        <input type="text" id="guides" placeholder="Nom..." onkeypress="handleEnter(event, 'guides')">
         <button class="add" onclick="addItem('guides')">Ajouter</button>
       </div>
       <ul id="guidesList"></ul>
@@ -211,7 +69,7 @@ textarea {
     <div class="category">
       <h3>🏪 Stands</h3>
       <div class="input-group">
-        <input type="text" id="stands" placeholder="Nom...">
+        <input type="text" id="stands" placeholder="Nom..." onkeypress="handleEnter(event, 'stands')">
         <button class="add" onclick="addItem('stands')">Ajouter</button>
       </div>
       <ul id="standsList"></ul>
@@ -220,7 +78,7 @@ textarea {
     <div class="category">
       <h3>🎨 Ateliers</h3>
       <div class="input-group">
-        <input type="text" id="ateliers" placeholder="Nom...">
+        <input type="text" id="ateliers" placeholder="Nom..." onkeypress="handleEnter(event, 'ateliers')">
         <button class="add" onclick="addItem('ateliers')">Ajouter</button>
       </div>
       <ul id="ateliersList"></ul>
@@ -229,7 +87,7 @@ textarea {
     <div class="category">
       <h3>👗 Défilé</h3>
       <div class="input-group">
-        <input type="text" id="defile" placeholder="Nom...">
+        <input type="text" id="defile" placeholder="Nom..." onkeypress="handleEnter(event, 'defile')">
         <button class="add" onclick="addItem('defile')">Ajouter</button>
       </div>
       <ul id="defileList"></ul>
@@ -238,43 +96,37 @@ textarea {
     <div class="category">
       <h3>🔒 Sécurité</h3>
       <div class="input-group">
-        <input type="text" id="securite" placeholder="Nom...">
+        <input type="text" id="securite" placeholder="Nom..." onkeypress="handleEnter(event, 'securite')">
         <button class="add" onclick="addItem('securite')">Ajouter</button>
       </div>
       <ul id="securiteList"></ul>
     </div>
   </div>
 
-  <!-- Section Achat -->
   <div id="achat" class="section">
     <h2>📋 Gestion des Achats</h2>
-    
     <div class="category">
       <h3>📦 Articles à acheter</h3>
       <div class="input-group">
-        <input type="text" id="articles" placeholder="Article...">
+        <input type="text" id="articles" placeholder="Article..." onkeypress="handleEnter(event, 'articles')">
         <button class="add" onclick="addItem('articles')">Ajouter</button>
       </div>
       <ul id="articlesList"></ul>
     </div>
   </div>
 
-  <!-- Section Programme -->
   <div id="programme" class="section">
     <h2>📅 Programme de l'événement</h2>
-    <p>Édite le programme ci-dessous:</p>
-    <textarea id="programmeText"></textarea>
-    <button class="add" style="margin-top: 10px; width: 100%;" onclick="saveProgram()">Sauvegarder</button>
+    <textarea id="programmeText" placeholder="Écris le programme ici..."></textarea>
+    <button class="add" style="margin-top: 10px; width: 100%;" onclick="saveProgram()">💾 Sauvegarder</button>
   </div>
 </div>
 
 <div class="footer">
-  <p>🌍 Événement Yennayer 2025/2026 - Célébration du Nouvel An Amazigh</p>
-  <p>Synchronisé avec Firebase Realtime Database</p>
+  <p>🌍 Yennayer 2025/2026 - Célébration du Nouvel An Amazigh</p>
 </div>
 
 <script>
-// Configuration Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBRrKHPxhjlVn3x2sNKoaKlv5dVP3SmhXA",
   authDomain: "analys2-56578.firebaseapp.com",
@@ -285,128 +137,128 @@ const firebaseConfig = {
   databaseURL: "https://analys2-56578-default-rtdb.firebaseio.com"
 };
 
-// Initialiser Firebase
-try {
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  console.log('✅ Firebase initialisé avec succès');
-} catch(err) {
-  console.error('❌ Erreur Firebase:', err);
-  document.getElementById('syncStatus').textContent = '❌ Erreur Firebase';
-}
-
+let db = null;
+let auth = null;
 const categories = ['guides', 'stands', 'ateliers', 'defile', 'securite', 'articles'];
-const db = firebase.database();
+const listeners = {};
 
-// Initialisation à la charge de la page
-function initPage() {
-  document.getElementById('syncStatus').textContent = '✅ Firebase synchronisé';
-  loadAllData();
+async function initFirebase() {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.database();
+    
+    await auth.signInAnonymously();
+    console.log('✅ Firebase OK');
+    document.getElementById('syncStatus').classList.add('online');
+    document.getElementById('syncStatus').innerHTML = '✅ Connecté';
+    
+    loadAllData();
+  } catch(err) {
+    console.error('❌ Firebase Error:', err);
+    document.getElementById('syncStatus').classList.add('offline');
+    document.getElementById('syncStatus').innerHTML = '❌ ' + err.message;
+  }
 }
 
-// Charger TOUTES les données depuis Firebase
 function loadAllData() {
-  categories.forEach(cat => {
-    loadData(cat);
-  });
+  categories.forEach(cat => loadData(cat));
   loadProgram();
 }
 
-// Charger une catégorie depuis Firebase
 function loadData(category) {
-  db.ref('items/' + category).on('value', (snapshot) => {
+  if (!db) return;
+  
+  if (listeners[category]) {
+    db.ref('yennayer/items/' + category).off('value', listeners[category]);
+  }
+  
+  const listener = (snapshot) => {
     const items = [];
     snapshot.forEach((child) => {
-      items.push(child.val());
+      items.push({ id: child.key, text: child.val() });
     });
     renderList(category, items);
-  });
+  };
+  
+  listeners[category] = listener;
+  db.ref('yennayer/items/' + category).on('value', listener);
 }
 
-// Charger le programme depuis Firebase
 function loadProgram() {
-  db.ref('programme').on('value', (snapshot) => {
-    const text = snapshot.val() || '';
-    document.getElementById('programmeText').value = text;
+  if (!db) return;
+  db.ref('yennayer/programme').on('value', (snapshot) => {
+    document.getElementById('programmeText').value = snapshot.val() || '';
   });
 }
 
-// Afficher la liste des items
 function renderList(category, items) {
   const list = document.getElementById(category + 'List');
-  list.innerHTML = '';
+  if (!list) return;
   
-  items.forEach((item, idx) => {
+  list.innerHTML = '';
+  if (items.length === 0) {
+    list.innerHTML = '<li style="text-align: center; color: #999;">Aucun élément</li>';
+    return;
+  }
+  
+  items.forEach((item) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span>${item}</span><button class="delete" onclick="deleteItem('${category}', ${idx})">✕</button>`;
+    li.innerHTML = `<span>${item.text}</span><button class="delete" onclick="deleteItem('${category}', '${item.id}')">✕</button>`;
     list.appendChild(li);
   });
 }
 
-// Ajouter un item dans Firebase
 function addItem(category) {
-  const input = document.getElementById(category);
-  const value = input.value.trim();
-  
-  if (!value) {
-    alert('Veuillez entrer une valeur');
+  if (!db) {
+    alert('Pas de connexion Firebase');
     return;
   }
   
-  // Ajouter à Firebase
-  const newRef = db.ref('items/' + category).push();
-  newRef.set(value).then(() => {
-    input.value = '';
-    console.log('✅ Item ajouté:', category);
-  }).catch(err => {
-    console.error('❌ Erreur:', err);
-    alert('Erreur lors de l\'ajout');
-  });
-}
-
-// Supprimer un item de Firebase
-function deleteItem(category, idx) {
-  db.ref('items/' + category).once('value', (snapshot) => {
-    const items = [];
-    snapshot.forEach((child) => {
-      items.push({ key: child.key, value: child.val() });
-    });
-    
-    if (items[idx]) {
-      db.ref('items/' + category + '/' + items[idx].key).remove().then(() => {
-        console.log('✅ Item supprimé');
-      }).catch(err => {
-        console.error('❌ Erreur:', err);
-      });
+  const input = document.getElementById(category);
+  const value = input.value.trim();
+  
+  if (!value) return;
+  
+  db.ref('yennayer/items/' + category).push(value, (err) => {
+    if (err) {
+      alert('Erreur: ' + err.message);
+    } else {
+      input.value = '';
     }
   });
 }
 
-// Sauvegarder le programme dans Firebase
-function saveProgram() {
-  const text = document.getElementById('programmeText').value;
+function deleteItem(category, itemId) {
+  if (!db) return;
   
-  db.ref('programme').set(text).then(() => {
-    alert('📅 Programme sauvegardé!');
-    console.log('✅ Programme sauvegardé');
-  }).catch(err => {
-    console.error('❌ Erreur:', err);
-    alert('Erreur lors de la sauvegarde');
+  if (confirm('Supprimer?')) {
+    db.ref('yennayer/items/' + category + '/' + itemId).remove();
+  }
+}
+
+function saveProgram() {
+  if (!db) return;
+  
+  const text = document.getElementById('programmeText').value;
+  db.ref('yennayer/programme').set(text, (err) => {
+    if (!err) alert('✅ Sauvegardé!');
   });
 }
 
-// Changer de section
 function switchTab(tab) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-  
   document.getElementById(tab).classList.add('active');
   event.target.classList.add('active');
 }
 
-// Démarrer l'application
-initPage();
-</script>
+function handleEnter(event, category) {
+  if (event.key === 'Enter') addItem(category);
+}
 
+window.addEventListener('DOMContentLoaded', initFirebase);
+</script>
 </body>
 </html>
+
