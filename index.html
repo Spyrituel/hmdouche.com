@@ -135,6 +135,7 @@ let db = null;
 let isReady = false;
 
 setTimeout(() => {
+  console.log('Firebase: Initializing...');
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
@@ -142,8 +143,8 @@ setTimeout(() => {
   isReady = true;
   document.getElementById('syncStatus').textContent = '✅ Firebase synchronisé';
   loadAllData();
-  console.log('✅ Firebase is ready');
-}, 200);
+  console.log('Firebase: Ready!');
+}, 500);
 
 function loadAllData() {
   categories.forEach(cat => loadData(cat));
@@ -179,15 +180,15 @@ function renderList(category, items) {
 
 function addItem(category) {
   if (!isReady || !db) {
-    alert('❌ Firebase en cours d\'initialisation. Réessayez dans quelques secondes.');
+    alert('❌ Firebase initializing... Try again in a moment');
     return;
   }
   const input = document.getElementById(category);
   const value = input.value.trim();
-  if (!value) { alert('Entrez une valeur'); return; }
+  if (!value) { alert('Please enter a value'); return; }
   db.ref('items/' + category).push().set(value).then(() => {
     input.value = '';
-  }).catch(err => alert('Erreur: ' + err.message));
+  }).catch(err => alert('Error: ' + err.message));
 }
 
 function deleteItem(category, idx) {
@@ -203,13 +204,13 @@ function deleteItem(category, idx) {
 
 function saveProgram() {
   if (!isReady || !db) {
-    alert('❌ Firebase en cours d\'initialisation');
+    alert('❌ Firebase initializing...');
     return;
   }
   const text = document.getElementById('programmeText').value;
   db.ref('programme').set(text).then(() => {
-    alert('📅 Sauvegardé!');
-  }).catch(err => alert('Erreur: ' + err.message));
+    alert('📅 Saved!');
+  }).catch(err => alert('Error: ' + err.message));
 }
 
 function switchTab(tab) {
