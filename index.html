@@ -41,7 +41,7 @@
   <div class="header">
     <h1>🎉 YENNAYER 2025/2026</h1>
     <p>Gestion d'Événement - INSIM</p>
-    <div class="sync-status" id="syncStatus">🔄 Vérification Firebase...</div>
+    <div class="sync-status" id="syncStatus">🔄 Connexion à Firebase...</div>
   </div>
 
   <div class="tabs">
@@ -109,7 +109,7 @@
 
     <div id="programme" class="section">
       <h2>📅 Programme de l'événement</h2>
-      <p>Editez le programme ci-dessous:</p>
+      <p>Éditez le programme ci-dessous:</p>
       <textarea id="programmeText"></textarea>
       <button class="add" style="margin-top: 10px; width: 100%;" onclick="saveProgram()">Sauvegarder</button>
     </div>
@@ -120,7 +120,6 @@
   </div>
 
 <script>
-// Configuration Firebase avec gestion d'erreur
 const firebaseConfig = {
   apiKey: "AIzaSyBRrKHPxhjlVn3x2sNKoaKlv5dVP3SmhXA",
   authDomain: "analys2-56578.firebaseapp.com",
@@ -131,27 +130,20 @@ const firebaseConfig = {
   databaseURL: "https://analys2-56578-default-rtdb.firebaseio.com"
 };
 
-let db = null;
-let isFirebaseReady = false;
-
-// Initialisation Firebase avec délai
-setTimeout(() => {
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    db = firebase.database();
-    isFirebaseReady = true;
-    document.getElementById('syncStatus').innerHTML = '✅ Firebase connecté avec succès';
-    console.log('Firebase initialisé');
-    loadAllData();
-  } catch(err) {
-    console.error('Erreur Firebase:', err);
-    document.getElementById('syncStatus').innerHTML = '❌ Erreur: ' + err.message;
-  }
-}, 100);
-
 const categories = ['guides', 'stands', 'ateliers', 'defile', 'securite', 'articles'];
+let db = null;
+let isReady = false;
+
+setTimeout(() => {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  db = firebase.database();
+  isReady = true;
+  document.getElementById('syncStatus').textContent = '✅ Firebase synchronisé';
+  loadAllData();
+  console.log('✅ Firebase is ready');
+}, 200);
 
 function loadAllData() {
   categories.forEach(cat => loadData(cat));
@@ -159,21 +151,18 @@ function loadAllData() {
 }
 
 function loadData(category) {
-  if (!isFirebaseReady || !db) return;
-  db.ref('items/' + category).on('value', (snapshot) => {
+  if (!isReady || !db) return;
+  db.ref('items/' + category).on('value', snapshot => {
     const items = [];
-    snapshot.forEach((child) => {
-      items.push(child.val());
-    });
+    snapshot.forEach(child => items.push(child.val()));
     renderList(category, items);
   });
 }
 
 function loadProgram() {
-  if (!isFirebaseReady || !db) return;
-  db.ref('programme').on('value', (snapshot) => {
-    const text = snapshot.val() || '';
-    document.getElementById('programmeText').value = text;
+  if (!isReady || !db) return;
+  db.ref('programme').on('value', snapshot => {
+    document.getElementById('programmeText').value = snapshot.val() || '';
   });
 }
 
@@ -189,55 +178,38 @@ function renderList(category, items) {
 }
 
 function addItem(category) {
-  if (!isFirebaseReady || !db) {
-    alert('❌ Firebase ne s\'initialise pas. Attendez quelques secondes et réessayez.');
+  if (!isReady || !db) {
+    alert('❌ Firebase en cours d\'initialisation. Réessayez dans quelques secondes.');
     return;
   }
-  
   const input = document.getElementById(category);
   const value = input.value.trim();
-  if (!value) {
-    alert('Veuillez entrer une valeur');
-    return;
-  }
-  
-  db.ref('items/' + category).push().set(value)
-    .then(() => {
-      input.value = '';
-      console.log('✅ Item ajouté:', category);
-    })
-    .catch(err => {
-      console.error('❌ Erreur:', err);
-      alert('Erreur: ' + err.message);
-    });
+  if (!value) { alert('Entrez une valeur'); return; }
+  db.ref('items/' + category).push().set(value).then(() => {
+    input.value = '';
+  }).catch(err => alert('Erreur: ' + err.message));
 }
 
 function deleteItem(category, idx) {
-  if (!isFirebaseReady || !db) return;
-  db.ref('items/' + category).once('value', (snapshot) => {
+  if (!isReady || !db) return;
+  db.ref('items/' + category).once('value', snapshot => {
     const items = [];
-    snapshot.forEach((child) => {
-      items.push({ key: child.key, value: child.val() });
-    });
+    snapshot.forEach(child => items.push({key: child.key, val: child.val()}));
     if (items[idx]) {
-      db.ref('items/' + category + '/' + items[idx].key).remove()
-        .catch(err => console.error('❌ Erreur:', err));
+      db.ref('items/' + category + '/' + items[idx].key).remove();
     }
   });
 }
 
 function saveProgram() {
-  if (!isFirebaseReady || !db) {
-    alert('❌ Firebase ne s\'initialise pas. Attendez quelques secondes.');
+  if (!isReady || !db) {
+    alert('❌ Firebase en cours d\'initialisation');
     return;
   }
-  
   const text = document.getElementById('programmeText').value;
-  db.ref('programme').set(text)
-    .then(() => {
-      alert('📅 Programme sauvegardé!');
-    })
-    .catch(err => alert('Erreur: ' + err.message));
+  db.ref('programme').set(text).then(() => {
+    alert('📅 Sauvegardé!');
+  }).catch(err => alert('Erreur: ' + err.message));
 }
 
 function switchTab(tab) {
