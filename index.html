@@ -25,8 +25,9 @@
     input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; flex: 1; }
     button.add { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
     button.add:hover { background: #764ba2; }
-    ul { list-style: none; }
-    li { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 5px; margin: 8px 0; }
+    .items-list { list-style: none; }
+    .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f0f0f0; border-radius: 5px; margin: 8px 0; }
+    .item-row span { flex: 1; }
     button.delete { padding: 5px 15px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; }
     button.delete:hover { background: #c0392b; }
     textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-family: monospace; font-size: 0.9em; min-height: 200px; margin-top: 10px; }
@@ -52,42 +53,42 @@
       <div class="category">
         <h3>📍 Guides</h3>
         <div class="input-group">
-          <input type="text" id="guides" placeholder="Nom...">
+          <input type="text" id="guides-input" placeholder="Nom...">
           <button class="add" onclick="addItem('guides')">Ajouter</button>
         </div>
-        <ul id="guidesList"></ul>
+        <div id="guides-list" class="items-list"></div>
       </div>
       <div class="category">
         <h3>🏪 Stands</h3>
         <div class="input-group">
-          <input type="text" id="stands" placeholder="Nom...">
+          <input type="text" id="stands-input" placeholder="Nom...">
           <button class="add" onclick="addItem('stands')">Ajouter</button>
         </div>
-        <ul id="standsList"></ul>
+        <div id="stands-list" class="items-list"></div>
       </div>
       <div class="category">
         <h3>🎨 Ateliers</h3>
         <div class="input-group">
-          <input type="text" id="ateliers" placeholder="Nom...">
+          <input type="text" id="ateliers-input" placeholder="Nom...">
           <button class="add" onclick="addItem('ateliers')">Ajouter</button>
         </div>
-        <ul id="ateliersList"></ul>
+        <div id="ateliers-list" class="items-list"></div>
       </div>
       <div class="category">
         <h3>👗 Défilé</h3>
         <div class="input-group">
-          <input type="text" id="defile" placeholder="Nom...">
+          <input type="text" id="defile-input" placeholder="Nom...">
           <button class="add" onclick="addItem('defile')">Ajouter</button>
         </div>
-        <ul id="defileList"></ul>
+        <div id="defile-list" class="items-list"></div>
       </div>
       <div class="category">
         <h3>🔒 Sécurité</h3>
         <div class="input-group">
-          <input type="text" id="securite" placeholder="Nom...">
+          <input type="text" id="securite-input" placeholder="Nom...">
           <button class="add" onclick="addItem('securite')">Ajouter</button>
         </div>
-        <ul id="securiteList"></ul>
+        <div id="securite-list" class="items-list"></div>
       </div>
     </div>
     
@@ -96,17 +97,17 @@
       <div class="category">
         <h3>📦 Articles à acheter</h3>
         <div class="input-group">
-          <input type="text" id="articles" placeholder="Article...">
+          <input type="text" id="articles-input" placeholder="Article...">
           <button class="add" onclick="addItem('articles')">Ajouter</button>
         </div>
-        <ul id="articlesList"></ul>
+        <div id="articles-list" class="items-list"></div>
       </div>
     </div>
     
     <div id="programme" class="section">
       <h2>📅 Programme de l'événement</h2>
       <p>Éditez le programme ci-dessous:</p>
-      <textarea id="programmeText"></textarea>
+      <textarea id="programme-input"></textarea>
       <button class="add" style="margin-top: 10px;" onclick="saveProgram()">Sauvegarder</button>
     </div>
   </div>
@@ -146,55 +147,67 @@
       categories.forEach(cat => {
         db.ref(cat).on('value', snapshot => {
           const items = snapshot.val() || {};
-          renderList(cat, items);
+          updateList(cat, items);
         });
       });
 
       db.ref('programme').on('value', snapshot => {
-        const text = snapshot.val() || '';
-        document.getElementById('programmeText').value = text;
+        document.getElementById('programme-input').value = snapshot.val() || '';
       });
     }
 
-    function renderList(cat, items) {
-      const ul = document.getElementById(cat + 'List');
-      ul.innerHTML = '';
+    function updateList(cat, items) {
+      const container = document.getElementById(cat + '-list');
+      container.innerHTML = '';
+      
       for (const key in items) {
-        if (items.hasOwnProperty(key)) {
-          const li = document.createElement('li');
+        if (items.hasOwnProperty(key) && typeof items[key] === 'string') {
+          const div = document.createElement('div');
+          div.className = 'item-row';
+          
           const span = document.createElement('span');
           span.textContent = items[key];
+          
           const btn = document.createElement('button');
           btn.className = 'delete';
           btn.textContent = '✕';
-          btn.onclick = () => deleteItem(cat, key);
-          li.appendChild(span);
-          li.appendChild(btn);
-          ul.appendChild(li);
+          btn.onclick = function() {
+            db.ref(cat + '/' + key).remove();
+          };
+          
+          div.appendChild(span);
+          div.appendChild(btn);
+          container.appendChild(div);
         }
       }
     }
 
     function addItem(cat) {
-      const input = document.getElementById(cat);
+      const input = document.getElementById(cat + '-input');
       const value = input.value.trim();
-      if (!value) return alert('Veuillez entrer une valeur');
       
-      const key = db.ref(cat).push().key;
-      db.ref(cat + '/' + key).set(value).then(() => {
+      if (!value) {
+        alert('Veuillez entrer une valeur');
+        return;
+      }
+      
+      const newKey = db.ref(cat).push().key;
+      db.ref(cat + '/' + newKey).set(value).then(() => {
         input.value = '';
-      }).catch(e => console.error('Erreur:', e));
-    }
-
-    function deleteItem(cat, key) {
-      db.ref(cat + '/' + key).remove().catch(e => console.error('Erreur:', e));
+      }).catch(err => {
+        console.error('Erreur ajout:', err);
+        alert('Erreur lors de l\'ajout');
+      });
     }
 
     function saveProgram() {
-      const text = document.getElementById('programmeText').value;
+      const text = document.getElementById('programme-input').value;
       db.ref('programme').set(text).then(() => {
         alert('📅 Sauvegardé!');
-      }).catch(e => console.error('Erreur:', e));
+      }).catch(err => {
+        console.error('Erreur:', err);
+        alert('Erreur lors de la sauvegarde');
+      });
     }
 
     function switchTab(tab) {
