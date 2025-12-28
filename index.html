@@ -119,7 +119,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
   <script>
-    // Configuration Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyC0A8uVABhbLUfRLCGFMwPrFrGRXjC8B-E",
       authDomain: "analys2-56578.firebaseapp.com",
@@ -130,68 +129,28 @@
       appId: "1:1053703268833:web:c8b5c7e5d8f9c2e4a1b2c3"
     };
 
-    // Initialiser Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const database = firebase.database();
+    const db = firebase.database();
     const categories = ['guides', 'stands', 'ateliers', 'defile', 'securite', 'articles'];
 
-    // Authentification anonyme
     auth.signInAnonymously().then(() => {
       document.querySelector('.status').textContent = '✅ Connecté Firebase';
       init();
     }).catch(error => {
-      console.error('Erreur authentification:', error);
+      console.error('Erreur:', error);
       document.querySelector('.status').textContent = '❌ Erreur Firebase';
     });
 
     function init() {
-      loadDataFromFirebase();
-      setupListeners();
-    }
-
-    function loadDataFromFirebase() {
-      // Charger les données existantes
       categories.forEach(cat => {
-        database.ref(cat).once('value', snapshot => {
+        db.ref(cat).on('value', snapshot => {
           const items = snapshot.val() || {};
           renderList(cat, items);
         });
       });
 
-      // Charger le programme
-      database.ref('programme').once('value', snapshot => {
-        const text = snapshot.val() || '';
-        document.getElementById('programmeText').value = text;
-      });
-    }
-
-    function setupListeners() {
-      // Ajouter des listeners pour les mises à jour en temps réel
-      categories.forEach(cat => {
-        database.ref(cat).on('child_added', snapshot => {
-          const items = {};
-          database.ref(cat).once('value', s => {
-            s.forEach(child => {
-              items[child.key] = child.val();
-            });
-            renderList(cat, items);
-          });
-        });
-
-        database.ref(cat).on('child_removed', snapshot => {
-          const items = {};
-          database.ref(cat).once('value', s => {
-            s.forEach(child => {
-              items[child.key] = child.val();
-            });
-            renderList(cat, items);
-          });
-        });
-      });
-
-      // Listener pour le programme
-      database.ref('programme').on('value', snapshot => {
+      db.ref('programme').on('value', snapshot => {
         const text = snapshot.val() || '';
         document.getElementById('programmeText').value = text;
       });
@@ -203,7 +162,14 @@
       for (const key in items) {
         if (items.hasOwnProperty(key)) {
           const li = document.createElement('li');
-          li.innerHTML = `<span>${items[key]}</span><button class="delete" onclick="deleteItem('${cat}', '${key}')">✕</button>`;
+          const span = document.createElement('span');
+          span.textContent = items[key];
+          const btn = document.createElement('button');
+          btn.className = 'delete';
+          btn.textContent = '✕';
+          btn.onclick = () => deleteItem(cat, key);
+          li.appendChild(span);
+          li.appendChild(btn);
           ul.appendChild(li);
         }
       }
@@ -212,26 +178,23 @@
     function addItem(cat) {
       const input = document.getElementById(cat);
       const value = input.value.trim();
-      if (!value) { alert('Veuillez entrer une valeur'); return; }
+      if (!value) return alert('Veuillez entrer une valeur');
       
-      // Ajouter à Firebase avec une clé auto-générée
-      const newKey = database.ref(cat).push().key;
-      const updates = {};
-      updates[cat + '/' + newKey] = value;
-      database.ref().update(updates).then(() => {
+      const key = db.ref(cat).push().key;
+      db.ref(cat + '/' + key).set(value).then(() => {
         input.value = '';
-      }).catch(error => console.error('Erreur d\'ajout:', error));
+      }).catch(e => console.error('Erreur:', e));
     }
 
     function deleteItem(cat, key) {
-      database.ref(cat + '/' + key).remove().catch(error => console.error('Erreur suppression:', error));
+      db.ref(cat + '/' + key).remove().catch(e => console.error('Erreur:', e));
     }
 
     function saveProgram() {
       const text = document.getElementById('programmeText').value;
-      database.ref('programme').set(text).then(() => {
-        alert('📅 Sauvegardé Firebase!');
-      }).catch(error => console.error('Erreur sauvegarde programme:', error));
+      db.ref('programme').set(text).then(() => {
+        alert('📅 Sauvegardé!');
+      }).catch(e => console.error('Erreur:', e));
     }
 
     function switchTab(tab) {
