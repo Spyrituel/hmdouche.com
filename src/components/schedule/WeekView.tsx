@@ -1,6 +1,14 @@
 import { motion } from 'framer-motion';
-import { Course, DAYS, TIME_SLOTS } from '@/data/schedule';
+import { Course, DAYS, TIME_SLOTS, categoryConfig } from '@/data/schedule';
 import CourseCard from './CourseCard';
+
+const categoryColors: Record<string, string> = {
+  'neon-blue': 'border-neon-blue/40 bg-neon-blue/5',
+  'neon-green': 'border-neon-green/40 bg-neon-green/5',
+  'neon-purple': 'border-neon-purple/40 bg-neon-purple/5',
+  'neon-red': 'border-neon-red/40 bg-neon-red/5',
+  'neon-yellow': 'border-neon-yellow/40 bg-neon-yellow/5',
+};
 
 interface WeekViewProps {
   courses: Course[];
@@ -59,24 +67,41 @@ export default function WeekView({ courses, currentCourse, nextCourse, notes, fi
                 );
               }
 
-              // Only render card on first matching slot
-              const isFirstSlot = course.startTime === slot.start ||
-                (TIME_SLOTS.findIndex(s => s.start >= course.startTime) === i);
+              // Check if this is the first slot for this course
+              const firstSlotIndex = TIME_SLOTS.findIndex(s => s.start >= course.startTime);
+              const isFirstSlot = firstSlotIndex === i;
 
-              if (!isFirstSlot) {
-                return <div key={`${day}-${slot.start}`} />;
+              if (isFirstSlot) {
+                // Count how many slots this course spans
+                const spanCount = TIME_SLOTS.filter(
+                  s => s.start >= course.startTime && s.end <= course.endTime
+                ).length || 1;
+
+                return (
+                  <div key={course.id} style={spanCount > 1 ? { gridRow: `span ${spanCount}` } : undefined}>
+                    <CourseCard
+                      course={course}
+                      isActive={currentCourse?.id === course.id}
+                      isNext={nextCourse?.id === course.id}
+                      note={notes[course.id]}
+                      onClick={() => onCourseClick(course)}
+                      compact
+                    />
+                  </div>
+                );
               }
 
+              // Non-first slot of a spanning course: render continuation
               return (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  isActive={currentCourse?.id === course.id}
-                  isNext={nextCourse?.id === course.id}
-                  note={notes[course.id]}
+                <div
+                  key={`${day}-${slot.start}`}
                   onClick={() => onCourseClick(course)}
-                  compact
-                />
+                  className={`rounded-lg border border-dashed cursor-pointer min-h-[60px] flex items-center justify-center text-[10px] text-muted-foreground transition-all hover:bg-muted/30 ${
+                    categoryColors[categoryConfig[course.category].color] || ''
+                  }`}
+                >
+                  ↕ {course.module.split(' ').slice(0, 2).join(' ')}…
+                </div>
               );
             })}
           </motion.div>

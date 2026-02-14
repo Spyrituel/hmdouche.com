@@ -23,7 +23,7 @@ export default function Header({ view, setView, focusMode, setFocusMode }: Heade
           </div>
           <div>
             <h1 className="font-display text-xl sm:text-2xl font-bold text-foreground neon-text">
-              CyberSchedule
+              Asri 07
             </h1>
             <p className="text-xs text-muted-foreground flex items-center gap-1">
               <Clock className="w-3 h-3" />
